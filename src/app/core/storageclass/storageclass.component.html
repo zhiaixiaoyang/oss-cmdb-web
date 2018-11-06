@@ -1,0 +1,20 @@
+<ng-container *ngIf="count<=5 && type=='form'">
+  <nz-spin [nzSpinning]="loading">
+  <nz-radio-group [(ngModel)]="storageclass" (ngModelChange)="getStorageclass()">
+    <ng-container *ngFor="let item of storageclasses">
+      <label nz-radio-button [nzValue]="item.name">{{item.displayName}}</label>
+    </ng-container>
+  </nz-radio-group>
+  </nz-spin>
+</ng-container>
+<ng-container *ngIf="count>5 || type=='table'">
+<nz-select nz-col [nzSize]="nzSize" [nzSm]="Sm" [nzXs]="Xs" id="storageclassId"
+           [(ngModel)]="storageclass" (ngModelChange)="getStorageclass()"
+           [nzPlaceHolder]="nzPlaceHolder" nzAllowClear nzShowSearch>
+    <nz-option
+      *ngFor="let item of storageclasses"
+      [nzLabel]="item.displayName"
+      [nzValue]="item.name">
+    </nz-option>
+</nz-select>
+</ng-container>

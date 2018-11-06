@@ -1,0 +1,31 @@
+.home-container {
+  min-height: calc(100% + 40px);
+  margin: -20px;
+  padding: 65px 60px 0 60px;
+  background-color: #f4f9fd;
+  line-height: 1.8em;
+}
+.content-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.content-desc-big {
+  margin-bottom: 25px;
+  font-size: 14px;
+  text-align: justify;
+}
+.content-desc {
+  margin-bottom: 20px;
+  text-align: justify;
+}
+.content-desc .desc-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+.img-container {
+  margin-top: 50px;
+}
+.img-container img {
+  width: 100%;
+}

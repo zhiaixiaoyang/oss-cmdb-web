@@ -1,0 +1,61 @@
+<h4 class="page-title">
+  <nzi-breadcrumb></nzi-breadcrumb>
+  <div class="page-title-opt pull-right">
+    <button nz-button (click)="historyBack()">
+      返回
+    </button>
+  </div>
+</h4>
+<div class="container-wrap">
+  <div class="title-row">
+    <div class="item-first"></div>
+    <div class="datas" *ngFor="let datas of stageName">
+      <nz-tooltip [nzTitle]="datas.name">
+        <div nz-tooltip class="name-content">{{datas.name}}</div>
+      </nz-tooltip>
+    </div>
+  </div>
+  <div class="time-average" *ngIf="loading === false">
+    <div class="time-first"></div>
+    <div class="time-percent" *ngFor="let datas of stageName; let n = index">
+      <div class="time-stage">{{stageTime[n]}}</div>
+      <div class="time-content">
+        <nz-progress [nzStrokeWidth]="5" [nzPercent]="timePercent[n]" [nzShowInfo]="false"></nz-progress>
+      </div>
+    </div>
+  </div>
+  <nz-spin class="spin-location" [nzSpinning]="loading">
+    <div class="container2" *ngFor="let datas of data;let n=index">
+      <div class="first-node">
+        <div class="history-name">{{datas.name}}</div>
+        <a class="history-start-time">
+          <div class="history-content-time">{{datas.startTimeMillis}}</div>
+          <div class="history-content-time-down">{{dms[n]}}</div>
+        </a>
+      </div>
+      <div class="node" *ngFor="let item of datas.stages">
+        <a routerLink="log2/{{datas.pipelineId}}/{{datas.buildName}}/history" *ngIf="item.status == 'SUCCESS'"
+           class="nodeEnter">
+          <span>{{item.durationMillis}}</span>
+        </a>
+        <a routerLink="log2/{{datas.pipelineId}}/{{datas.buildName}}/history"
+           *ngIf="item.status == 'IN_PROGRESS' || item.status == 'PAUSED_PENDING_INPUT'"
+           class="nodeEnter">
+          <i class="anticon anticon-loading anticon-spin"></i>
+        </a>
+        <a routerLink="log2/{{datas.pipelineId}}/{{datas.buildName}}/history" *ngIf="item.status == 'FAILED'"
+           class="nodeEnterFailed">
+          <span>{{item.durationMillis}}</span>
+        </a>
+        <a routerLink="log2/{{datas.pipelineId}}/{{datas.buildName}}/history" *ngIf="item.status == 'NIL'"
+           class="nodeEnterNil">
+        </a>
+      </div>
+    </div>
+    <div *ngIf="noData === true" class="container2">
+      <span class="no-data">无数据</span>
+    </div>
+  </nz-spin>
+</div>
+
+

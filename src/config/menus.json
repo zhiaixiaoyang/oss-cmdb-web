@@ -1,0 +1,255 @@
+{
+  "container": {
+    "label": "应用服务",
+    "icon": "fab fa-cloudversify",
+    "link": "application",
+    "sideLists": [
+      {
+        "label": "容器服务",
+        "icon": "fa fa-box-open",
+        "children": [
+          {
+            "label": "应用管理",
+            "link": "application",
+            "icon": "fa fa-cogs"
+          },
+          {
+            "label": "应用实例",
+            "link": "application-instance",
+            "icon": "fa fa-share-square"
+          },
+          {
+            "label": "部署",
+            "link": "application-deploys",
+            "icon": "fa fa-cube"
+          },
+          {
+            "label": "POD",
+            "link": "application-pods",
+            "icon": "fa fa-flask"
+          },
+          {
+            "label": "配置",
+            "link": "application-configmaps",
+            "icon": "fa fa-eject"
+          },
+          {
+            "label": "密钥",
+            "link": "application-secret",
+            "icon": "fa fa-eject"
+          },
+          {
+            "label": "卷",
+            "link": "application-persistentvolume",
+            "icon": "fa fa-hockey-puck"
+          }
+        ],
+        "open": false
+      },
+      {
+        "label": "微服务",
+        "icon": "fa fa-object-group",
+        "children": [
+          {
+            "label": "服务治理",
+            "link": "application-service",
+            "icon": "fa fa-th-large"
+          },
+          {
+            "label": "服务网关",
+            "link": "service-mesh",
+            "icon": "fa fa-shield-alt"
+          }
+        ]
+      },
+      {
+        "label": "容器镜像",
+        "link": "app-image",
+        "icon": "fa fa-image"
+      },
+      {
+        "label": "应用模板",
+        "icon": "fa fa-server",
+        "children": [
+          {
+            "label": "模板市场",
+            "link": "app-service-definition",
+            "icon": "fa fa-archive"
+          },
+          {
+            "label": "模板实例",
+            "link": "app-service-instance",
+            "icon": "fab fa-codepen"
+          }
+        ],
+        "open": false
+      }
+    ]
+  },
+  "devOps": {
+    "label": "软件开发",
+    "icon": "fa fa-list-alt",
+    "link": "app-apply-build-management",
+    "sideLists": [
+      {
+        "label": "构建",
+        "link": "app-apply-build-management",
+        "icon": "fa fa-anchor"
+      },
+      {
+        "label": "流水线",
+        "link": "app-apply-pipeline-management",
+        "icon": "fa fa-sliders-h"
+      },
+      {
+        "label": "代码检查",
+        "icon": "fa fa-bug",
+        "children": [
+          {
+            "label": "任务",
+            "link": "app-apply-code-check",
+            "icon": "fa fa-cubes"
+          },
+          {
+            "label": "规则",
+            "icon": "fas fa-boxes",
+            "link": "app-apply-code-rule"
+          }
+        ]
+      },
+      {
+        "label": "程序包",
+        "link": "app-binaries",
+        "icon": "fa fa-file-code"
+      },
+      {
+        "label": "代码托管",
+        "link": "app-apply-code-manage",
+        "icon": "fas fa-code-branch"
+      }
+    ]
+  },
+  "database": {
+    "label": "数据库服务",
+    "icon": "fas fa-database",
+    "link": "rds/mysql",
+    "sideLists": [
+      {
+        "label": "云数据库-MySQL",
+        "link": "rds/mysql",
+        "icon": "fab fa-medium-m"
+      },
+      {
+        "label": "云数据库-Redis",
+        "link": "rds/redis",
+        "icon": "fas fa-registered"
+      },
+      {
+        "label": "云数据库-MongoDB",
+        "link": "rds/mongodb",
+        "icon": "fab fa-monero"
+      },
+      {
+        "label": "云数据库-TSDB",
+        "link": "rds/tsdb",
+        "icon": "fab fa-tumblr"
+      }
+    ]
+  },
+  "iot": {
+    "label": "物联网服务",
+    "icon": "fab fa-audible",
+    "link": "hub/home",
+    "sideLists": [
+      {
+        "label": "概览",
+        "link": "hub/home",
+        "icon": "fa fa-home"
+      },
+      {
+        "label": "IOT Hub",
+        "link": "hub/endpoint",
+        "icon": "fa fa-hdd"
+      },
+      {
+        "label": "设备管理",
+        "icon": "fa fa-bars",
+        "children": [
+          {
+            "label": "设备实例",
+            "link": "hub/device/detail/deviceInstance",
+            "icon": "fa fa-hdd"
+          },
+          {
+            "label": "设备模型",
+            "link": "hub/device/detail/deviceType",
+            "icon": "fa fa-hdd"
+          }
+        ]
+      },
+      {
+        "label": "时序数据库",
+        "link": "tsdb",
+        "icon": "fa fa-list-alt"
+      },
+      {
+        "label": "流分析",
+        "link": "stream/rules",
+        "icon": "fa fa-database"
+      }
+    ]
+  },
+  "cluster":{
+    "label": "集群管理",
+    "icon": "fa fa-cubes",
+    "link": "cluster",
+    "sideLists": [
+      {
+        "label": "集群管理",
+        "icon": "fas fa-boxes",
+        "link": "cluster"
+      },
+      {
+        "label": "节点管理",
+        "icon": "fas fa-cubes",
+        "link": "cluster-node"
+      },
+      {
+        "label": "命名空间",
+        "icon": "fas fa-film",
+        "link": "application-space"
+      },
+      {
+        "label": "网络策略",
+        "icon": "fas fa-wifi",
+        "link": "cluster-network"
+      },
+      {
+        "label": "安全策略",
+        "link": "cluster-security",
+        "icon": "fa fa-lock"
+      },
+      {
+        "label": "存储信息",
+        "link": "cluster-storage",
+        "icon": "fa fa-database"
+      },
+      {
+        "label": "服务端口",
+        "link": "external-service",
+        "icon": "fa fa-object-ungroup"
+      },
+      {
+        "label": "服务域名",
+        "link": "domain",
+        "icon": "fa fa-globe"
+      },
+      {
+        "label": "日志管理",
+        "link": "cluster-log",
+        "icon": "fa fa-file"
+      }
+    ],
+    "open": false
+  }
+}

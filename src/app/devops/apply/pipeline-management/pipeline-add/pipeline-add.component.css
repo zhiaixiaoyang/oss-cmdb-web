@@ -1,0 +1,471 @@
+.time-trigger-style {
+  width: auto !important;
+  float: left !important;
+}
+
+.form-input-width {
+  width: 200px;
+}
+
+.model-message {
+  overflow-x: hidden;
+  position: relative;
+  min-width: 1071px;
+  min-height: 450px;
+}
+
+.pipeline-box {
+  float: left;
+  overflow-x: hidden;
+  width: 75%;
+  position: absolute;
+  height: 369px;
+}
+
+.button-form-pipeline {
+  position: fixed;
+  height: 55px;
+  bottom: 0;
+  right: 28px;
+  left: 210px;
+  width: 100%;
+  z-index: 1002;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(97, 97, 97, 0.4);
+}
+
+.button-submit{
+  position: relative;
+  left: -10%;
+}
+
+.button-back{
+  margin-left: 20px;
+  position: relative;
+  left: -10%;
+}
+
+.add-stage-keyframe {
+  background-color: #f0f0f0;
+  overflow-x: hidden;
+  right: 0;
+  width: 25%;
+  position: absolute;
+  height: 369px;
+  border-left: 1px solid #e0dddd;
+}
+
+.form-border {
+  position: relative;
+  min-width: 1071px;
+  height: 49px;
+  border-bottom: 1px solid #e0dddd;
+}
+
+.pipeline-all {
+  overflow: hidden;
+  position: relative;
+  min-width: 1071px;
+  min-height: 369px;
+  border-bottom: 1px solid #e0dddd;
+}
+
+.construct {
+  overflow: scroll;
+}
+
+.pipeline-board {
+  position: relative;
+  top: 30px;
+  width: 807px;
+  height: 339px;
+  margin: 0 auto;
+}
+
+.stage-odd {
+  width: 190px;
+  height: 120px;
+  float: right;
+  right: 63px;
+  position: relative;
+  top: 18px;
+}
+
+.stage-end-odd {
+  width: 190px;
+  height: 120px;
+  right: 60px;
+  float: right;
+  position: relative;
+  top: 18px;
+}
+
+.stage-base {
+  position: relative;
+  width: 130px;
+  height: 120px;
+  float: right;
+  border-radius: 5px;
+  transition: all 0.2s ease-out;
+  border: rgba(224, 221, 221, 0.91) solid 1px;
+  -webkit-transition: all 0.2s ease-out; /*老版本火狐 浏览器*/
+  -moz-transition: all 0.2s ease-out; /* Firefox 4 */
+  -o-transition: all 0.2s ease-out; /*Safari　Chrome 浏览器*/
+}
+
+.stage-name {
+  left: 6px;
+  width: 120px;
+  height: 18px;
+  position: relative;
+  top: 2px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.delete-stage {
+  position: absolute;
+  right: -8px;
+  height: 18px;
+  width: 30px;
+  font-size: 10px;
+  top: 3px;
+}
+
+.error-message {
+  opacity: 0;
+  color: red;
+  font-size: 30px;
+  position: absolute;
+  top: 34px;
+  left: 47px;
+  width: 30px;
+  height: 30px;
+  font-weight: 600
+}
+
+.stage-content {
+  margin-top: 5px;
+  height: 3px;
+  background-color: #3fb613;
+  width: 129px;
+  border-radius: 3px
+}
+
+.stage-vertical {
+  background-color: #3fb613;
+  position: absolute;
+  height: 10px;
+  width: 3px;
+  right: 63px;
+}
+
+.icon-style {
+  position: absolute;
+  font-size: 17px;
+  color: #9E9E9E;
+  line-height: 25px;
+  right: 52px;
+  top: 10px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1px solid #9E9E9E;
+}
+
+.stage-type {
+  position: absolute;
+  font-size: 12px;
+  top: 36px;
+  text-align: center;
+  width: 130px;
+  font-weight: 100;
+}
+
+.tag-content {
+  font-size: 15px;
+  font-weight: bold;
+  position: absolute;
+  width: 130px;
+  text-align: center;
+  top: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stage-tag {
+  height: 92px;
+  width: 128px;
+  border-radius: 5px;
+  position: relative;
+  text-align: center;
+  background-color: #f0f0f0;
+  word-wrap: break-word;
+}
+
+.delete-stage .fa-trash:hover {
+  transform: scale(1.1);
+  -ms-transform: scale(1.1); /* IE 9 */
+  -moz-transform: scale(1.1); /* Firefox */
+  -webkit-transform: scale(1.1); /* Safari 和 Chrome */
+  -o-transform: scale(1.1); /* Opera */
+}
+
+.fa-plus-circle:hover {
+  transform: scale(1.1);
+  -ms-transform: scale(1.1); /* IE 9 */
+  -moz-transform: scale(1.1); /* Firefox */
+  -webkit-transform: scale(1.1); /* Safari 和 Chrome */
+  -o-transform: scale(1.1); /* Opera */
+}
+
+.stage-arrow-left {
+  float: right;
+  width: 60px;
+  height: 100px;
+}
+
+.stage-left-minus {
+  color: #d9d9d96b;
+  font-weight: 900;
+  font-size: 27px;
+  margin-right: -4px;
+  line-height: 60px;
+  float: right;
+}
+
+.stage-left-plus {
+  color: #e0c109;
+  font-size: 18px;
+  left: 20px;
+  top: 30px;
+  float: right;
+  position: absolute;
+}
+
+.stage-content-arrow-left {
+  color: #d9d9d96b;
+  top: 40px;
+  font-size: 50px;
+  float: right;
+  position: absolute
+}
+
+.stage-arrow-down {
+  width: 130px;
+  height: 30px;
+  float: right;
+  position: relative;
+}
+
+.stage-even {
+  width: 190px;
+  height: 150px;
+  float: left;
+  left: 39px;
+  position: relative;
+}
+
+.stage-even-base {
+  position: relative;
+  width: 130px;
+  height: 120px;
+  float: left;
+  border: 1px #E0DDDD solid;
+  transition: all 0.2s ease-out;
+  border-radius: 5px;
+  -webkit-transition: all 0.2s ease-out; /*老版本火狐 浏览器*/
+  -moz-transition: all 0.2s ease-out; /* Firefox 4 */
+  -o-transition: all 0.2s ease-out; /*Safari　Chrome 浏览器*/
+}
+
+.stage-first-base {
+  position: relative;
+  width: 130px;
+  height: 120px;
+  float: left;
+}
+
+.first-icon {
+  position: absolute;
+  color: #bfbcbc;
+  top: 25px;
+  left: 36px;
+}
+
+.start-content {
+  position: absolute;
+  top: 55px;
+  font-size: 17px;
+  left: 32px;
+  color: #767272b5;
+}
+
+.end-content {
+  color: #767272b5;
+  position: absolute;
+  top: 55px;
+  font-size: 17px;
+  left: 32px;
+}
+
+.start-stage {
+  font-size: 20px;
+  left: 15px;
+  width: 100px;
+  top: 15px;
+  position: absolute;
+  height: 100px;
+  border: 1px solid #E0DDDD;
+  border-radius: 50%;
+}
+
+.end-stage{
+  font-size: 20px;
+  left: 75px;
+  width: 100px;
+  top: 15px;
+  position: absolute;
+  height: 100px;
+  border: 1px solid #E0DDDD;
+  border-radius: 50%;
+}
+
+.stage-even-arrow-right {
+  float: left;
+  width: 60px;
+  height: 100px;
+}
+
+.stage-plus {
+  color: #e0c109;
+  font-size: 18px;
+  top: 35px;
+  right: 22px;
+  float: left;
+  position: absolute;
+}
+
+.stage-right {
+  color: #d9d9d96b;
+  font-size: 50px;
+  top: 40px;
+  position: absolute;
+  float: left;
+}
+
+.stage-down-left-plus {
+  color: #e0c109;
+  font-size: 18px;
+  position: relative;
+  left: 30px;
+  top: 9px;
+}
+
+.stage-down-plus {
+  color: #e0c109;
+  font-size: 18px;
+  position: relative;
+  left: 16px;
+  top: 9px;
+}
+
+.stage-left-arrow-down {
+  color: #d9d9d96b;
+  font-size: 50px;
+  position: absolute;
+  right: 35px;
+}
+
+.stage-content-arrow-down {
+  color: #d9d9d96b;
+  font-size: 50px;
+  position: absolute;
+  right: 93px;
+}
+
+.left-page {
+  position: absolute;;
+  left: 20px;
+  font-size: 30px;
+  color: #838080;
+  border-radius: 20px;
+  bottom: 10px;
+  transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out; /*老版本火狐 浏览器*/
+  -moz-transition: all 0.2s ease-out; /* Firefox 4 */
+  -o-transition: all 0.2s ease-out; /*Safari　Chrome 浏览器*/
+}
+
+.left-page:hover {
+  transform: scale(1.2);
+  -ms-transform: scale(1.2); /* IE 9 */
+  -moz-transform: scale(1.2); /* Firefox */
+  -webkit-transform: scale(1.2); /* Safari 和 Chrome */
+  -o-transform: scale(1.2); /* Opera */
+  -moz-box-shadow: 0 0 8px rgba(81, 81, 81, 0.8);
+  -webkit-box-shadow: 0 0 8px rgba(81, 81, 81, 0.8);
+  box-shadow: 0 0 8px rgba(81, 81, 81, 0.8)
+}
+
+.right-page {
+  position: absolute;;
+  right: 43px;
+  font-size: 30px;
+  color: #838080;
+  border-radius: 20px;
+  bottom: 10px;
+  transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out; /*老版本火狐 浏览器*/
+  -moz-transition: all 0.2s ease-out; /* Firefox 4 */
+  -o-transition: all 0.2s ease-out; /*Safari　Chrome 浏览器*/
+}
+
+.right-page:hover {
+  transform: scale(1.2);
+  -ms-transform: scale(1.2); /* IE 9 */
+  -moz-transform: scale(1.2); /* Firefox */
+  -webkit-transform: scale(1.2); /* Safari 和 Chrome */
+  -o-transform: scale(1.2); /* Opera */
+  -moz-box-shadow: 0 0 8px rgba(81, 81, 81, 0.8);
+  -webkit-box-shadow: 0 0 8px rgba(81, 81, 81, 0.8);
+  box-shadow: 0 0 8px rgba(81, 81, 81, 0.8)
+}
+
+.minute-layout {
+  color: #979393;
+  line-height: 30px;
+  margin-left: 5px;
+}
+
+.hint {
+  float: left;
+  position: relative;
+  height: 30px;
+  left: 100px;
+}
+
+.hint-message {
+  float: left;
+  position: relative;
+  font-size: 15px;
+  width: 70px;
+  font-weight: bold;
+}
+
+.hint-content {
+  left: 20px;
+  float: left;
+  position: relative;
+}
+
+
+
+

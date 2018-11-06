@@ -1,0 +1,114 @@
+<div class="page-title">
+  <h4>代码检查</h4>
+  <a class="pull-right help-link">
+    <i class="anticon anticon-question-circle-o"></i>代码检查使用指南
+  </a>
+</div>
+<div class="page-header">
+  代码审查能够在代码构建过程中帮助开发人员快速、有效的定位代码缺陷并及时纠正这些问题，高效检测软件缺陷和安全隐患，提供优秀的静态源代码分析解决方案
+</div>
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+    <button routerLink="add" nz-button nzType="primary" class="btn-add"><i class="fas fa-plus"></i> 创建任务</button>
+  </div>
+  <div class="pull-right">
+    <nz-select class="search-type" [(ngModel)]="selectedValue" nzPlaceHolder="选择一个状态">
+      <nz-option [nzValue]="'name'" [nzLabel]="'任务名称'"></nz-option>
+      <nz-option [nzValue]="'build'" [nzLabel]="'构建'"></nz-option>
+      <nz-option [nzValue]="'pipeline'" [nzLabel]="'流水线'"></nz-option>
+    </nz-select>
+    <ng-container [ngSwitch]="selectedValue">
+      <ng-container *ngSwitchCase="'name'">
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input name="name" (keyup.enter)="search()" [(ngModel)]="searchName" nz-input placeholder="请输入构建名称">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch (click)="search()">
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="'build'">
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input name="projectUrl" (keyup.enter)="search()" [(ngModel)]="searchName" nz-input placeholder="请输入项目地址">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch (click)="search()">
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="'pipeline'">
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input name="pkgName" (keyup.enter)="search()" [(ngModel)]="searchName" nz-input placeholder="请输入程序包名称">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch (click)="search()">
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input nz-input placeholder="请输入关键词">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch>
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <button nz-button (click)="renovate()" class="table-top-opt"><i class="anticon anticon-reload"></i></button>
+  </div>
+</div>
+<nz-table nzShowSizeChanger [nzPageSize]="10" #nzTable [nzData]="data" [nzLoading]="loading" nzBordered>
+  <thead>
+  <tr>
+    <th>
+      <span>任务名称</span>
+    </th>
+    <th>
+      <span>构建</span>
+    </th>
+    <th>
+      <span>源代码路径</span>
+    </th>
+    <th>
+      <span>流水线</span>
+    </th>
+    <th>
+      <span>构建时间</span>
+    </th>
+    <th>
+      <span>操作</span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of nzTable.data">
+    <td>
+      <a routerLink="detail/{{data.Id}}">{{data.name || '--'}}</a>
+    </td>
+    <td>{{data.constructName || '暂无关联'}}</td>
+    <td>{{data.sonarSources || '--'}}</td>
+    <td>{{data.pipelineName || '暂无关联'}}</td>
+    <td>{{data.createTime | date : "y-MM-dd HH:mm:ss" || '--'}}</td>
+    <td class="table-opt">
+      <a href="{{data.sonarResult}}" target="_blank">审查结果</a>
+      <nz-dropdown [nzTrigger]="'click'">
+        <a nz-dropdown>
+          更多 <i class="anticon anticon-caret-down"></i>
+        </a>
+        <ul nz-menu class="ant-table-dropdown-menu">
+          <li nz-menu-item *ngIf="data.warrant === true" routerLink="add/{{data.Id}}/edit" >编辑</li>
+          <li nz-menu-item class="disable-li" *ngIf="data.warrant === false" >编辑</li>
+          <li nz-menu-item *ngIf="data.warrant === true" (click)="showConfirm(data.Id, data.name, deleteInfo)">删除</li>
+          <li nz-menu-item class="disable-li"  *ngIf="data.warrant === false">删除</li>
+        </ul>
+      </nz-dropdown>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "mongodb",
+    "display_name": "数据库节点"
+  },
+  {
+    "name": "mysql",
+    "display_name": "数据库节点"
+  },
+  {
+    "name": "redis",
+    "display_name": "缓存节点"
+  },
+  {
+    "name": "sentinel",
+    "display_name": "哨兵节点"
+  },
+  {
+    "name": "cli",
+    "display_name": "控制台节点"
+  }
+]

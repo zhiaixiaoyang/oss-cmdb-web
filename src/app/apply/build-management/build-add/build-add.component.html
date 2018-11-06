@@ -1,0 +1,1351 @@
+<div class="add-page-title">
+  <a (click)="handleCancel()"><i class="fas fa-angle-left"></i>返回列表</a>
+  <span *ngIf="type === 'edit'">编辑构建</span>
+  <span *ngIf="!type">创建构建</span>
+</div>
+<nz-alert nzType="info" nzBanner nzShowIcon="false" [nzDescription]='innerTemplate'
+          [ngStyle]="{ 'marginBottom': '16px' }">
+  <ng-template #innerTemplate>
+    基于源代码构建： 创建基于源代码的构建，包含：基本信息、源码库信息、语言和构建工具等，可基于此构建生成镜像和研发流水线。
+    基于程序包的构建： 创建基于程序包的构建，包含：基本信息、程序包信息、镜像等，可基于此构建生成镜像和研发流水线。
+    <a *ngIf="!type && buildType !=='b2i'" (click)="autoWrite()" target="_blank">填充示例</a>
+  </ng-template>
+</nz-alert>
+<nz-spin [nzSpinning]="loading">
+  <div class="form-fieldset form-horizontal form-align-left">
+    <nzi-form [formName]="validateForm" #NziFormComponent>
+      <form nz-form [formGroup]="validateForm">
+        <legend>
+          <i class="icon-square"></i>基本信息
+        </legend>
+        <fieldset>
+          <div class="form-static">
+            <nz-form-item>
+              <nz-form-label nzRequired>构建名称</nz-form-label>
+              <nz-form-control>
+                <input class="form-input" formControlName="name" [(ngModel)]="modelData.name" id="name" nz-input>
+                <nz-form-explain *ngIf="getInvalidMessage('name')">
+                  {{getInvalidMessage('name').message}}
+                </nz-form-explain>
+              </nz-form-control>
+              <p class="help-text" [class.help-text-bottom]="getInvalidMessage('name')">
+                用于识别构建，只能以字母开头,仅包含字母、数字、下划线及中横线,长度介于1-50之间。
+              </p>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>构建类型</nz-form-label>
+              <nz-form-control>
+                <nzi-select formControlName="buildType" [options]="buildOptions"
+                            [(ngModel)]="modelData.buildType" (ngModelChange)="switchForm($event)"></nzi-select>
+                <nzi-help [options]="{'title': '根据需求选择相应的构建类型。'}"></nzi-help>
+                <nz-form-explain *ngIf="getInvalidMessage('buildType')">
+                  {{getInvalidMessage('buildType').message}}
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div [ngSwitch]="buildType">
+            <div *ngSwitchCase="'s2i'">
+              <legend>
+                <i class="icon-square"></i>源码库配置
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>源码库类型</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="scmType" [options]="typeOptions"
+                                  [(ngModel)]="modelData.scmType"></nzi-select>
+                      <nzi-help [options]="{'title': '请按照存放源代码所使用的源码库类型进行选择。'}"></nzi-help>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmType')">
+                        {{getInvalidMessage('scmType').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-control></nz-form-control>
+                  <nz-form-item>
+                    <nz-form-label>是否认证</nz-form-label>
+                    <nz-form-control>
+                      <nz-switch formControlName="check" [(ngModel)]="check"
+                                 (ngModelChange)="identification($event)"></nz-switch>
+                      <nzi-help [options]="{'title': '如果构建镜像时需要拉取代码，需要认证填入具有读取源代码权限的用户的身份信息。'}"></nzi-help>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item *ngIf="authentication===true">
+                    <nz-form-label>用户名</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" placeholder="请输入用户名" formControlName="scmUsername"
+                             (ngModelChange)="testButtonChange()"
+                             [(ngModel)]="modelData.scmUsername" nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmUsername')">
+                        {{getInvalidMessage('scmUsername').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item *ngIf="authentication===true">
+                    <nz-form-label>密码</nz-form-label>
+                    <nz-form-control nz-col>
+                      <input class="form-input" placeholder="请输入密码" type="password" name="scmPassword"
+                             formControlName="scmPassword"
+                             [(ngModel)]="modelData.scmPassword" (ngModelChange)="testButtonChange()"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmPassword')">
+                        {{getInvalidMessage('scmPassword').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>token</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" placeHolder="请输入token(必填)" formControlName="apiToken"
+                             [(ngModel)]="modelData.apiToken" (ngModelChange)="apiTokenChange()" nz-input>
+                      <nzi-help [options]="{'title': titleContent}"></nzi-help>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('apiToken')">
+                        {{getInvalidMessage('apiToken').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('apiToken')">可访问源码库的API
+                      token，如需自动创建WebHook实现git事件触发构建时请填写。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>项目地址</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="projectUrl" [(ngModel)]="modelData.projectUrl"
+                             (ngModelChange)="testButtonChange()"
+                             nz-input>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('projectUrl')">
+                        {{getInvalidMessage('projectUrl').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('projectUrl')">
+                      填写存放源代码的项目git地址。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>分支名称</nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group *ngIf="branchInput" [nzSuffix]="suffixTemplate">
+                        <input (click)="getBranch()" nz-input formControlName="branchName" class="form-input"
+                               placeHolder="请输入分支名称或获取分支选择" [(ngModel)]="modelData.branchName">
+                      </nz-input-group>
+                      <nz-select *ngIf="!branchInput" nzShowSearch nzAllowClear (click)="getBranch()"
+                                 formControlName="branchName" [nzMaxMultipleCount]="1" class="form-input"
+                                 nzPlaceHolder="请输入token和项目地址来获取分支" [(ngModel)]="modelData.branchName">
+                        <nz-option *ngFor="let option of branchOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                        <nz-option *ngIf="isLoadingBranch === true" nzDisabled nzCustomContent><i
+                          class="anticon anticon-loading anticon-spin loading-icon"></i> Loading Data...
+                        </nz-option>
+                      </nz-select>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('branchName')">
+                        {{getInvalidMessage('branchName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <span class="branch-error-message" *ngIf="errorNum<0 && testCode===false">{{errorMessage}}</span>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('branchName')">
+                      填写用于构建的分支/tag的名称或者输入token与项目地址拉取分支。</p>
+                  </nz-form-item>
+                  <nz-form-item class="test-location">
+                    <nz-form-control class="button-length">
+                      <button [disabled]="testCode" nzSize="default" nz-button nzType="primary"
+                              (click)="apiTokenValidator()" [nzLoading]="isLoadingTest">测试
+                      </button>
+                      <nzi-help [options]="{'title': '测试token与项目地址是否匹配正确'}"></nzi-help>
+                    </nz-form-control>
+                    <span class="api-error-message" *ngIf="resultNum < 0 && testCode===false">token:{{apiMessage}}</span>
+                    <span class="api-success-message"
+                          *ngIf="resultNum ===0 && testCode===false">token:{{apiMessage}}</span>
+                    <!--<span class="user-error-message" *ngIf="userNum < 0 && testCode===false">用户名密码:{{userMessage}}</span>-->
+                    <!--<span class="user-success-message"-->
+                    <!--*ngIf="userNum ===0 && testCode===false">用户名密码:{{userMessage}}</span>-->
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>语言和构建工具
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>开发语言</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="language" [options]="languageOptions" [(ngModel)]="modelData.language"
+                                  (ngModelChange)="languageType($event)"></nzi-select>
+                      <nzi-help [options]="{'title': '请根据源代码的编程语言进行选择。'}"></nzi-help>
+                      <nz-form-explain class="select-error" *ngIf="getInvalidMessage('language')">
+                        {{getInvalidMessage('language').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>构建工具</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="buildTool" [options]="toolOptions"
+                                  [(ngModel)]="modelData.buildTool"
+                                  (ngModelChange)="buildToolChange($event)"></nzi-select>
+                      <nzi-help [options]="{'title': '请根据构建源代码所使用的构建工具进行选择。'}"></nzi-help>
+                      <nz-form-explain class="select-error" *ngIf="getInvalidMessage('buildTool')">
+                        {{getInvalidMessage('buildTool').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>构建脚本</nz-form-label>
+                    <nz-form-control>
+        <textarea nz-input rows="10" wrap="hard" formControlName="buildScript"
+                  [(ngModel)]="modelData.buildScript"></textarea>
+                      <nz-form-explain *ngIf="getInvalidMessage('buildScript')">
+                        {{getInvalidMessage('buildScript').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>触发器
+              </legend>
+              <div nz-col>
+                <nz-tabset [nzShowPagination]="'false'" nzSize="'default'" [nzTabPosition]="'left'" [nzType]="'line'"
+                           [(nzSelectedIndex)]="trigger" (nzSelectedIndexChange)="triggerCheck()">
+                  <nz-tab [nzTitle]="titleTemplate">
+                    <ng-template #titleTemplate>
+                      <label nz-radio [nzDisabled]="gitEventOrNot" formControlName="handGit" [(ngModel)]="handGit"
+                             (ngModelChange)="gitEventChange()">
+                        <span>git事件</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-item>
+                      <nz-form-control>
+                        <nz-checkbox-group formControlName="triggerGitevent"
+                                           [(ngModel)]="checkOptions"></nz-checkbox-group>
+                        <nz-form-explain *ngIf="getInvalidMessage('triggerGitevent')">
+                          {{getInvalidMessage('triggerGitevent').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-tab>
+                  <nz-tab [nzTitle]="titleTemplate2">
+                    <ng-template #titleTemplate2>
+                      <label nz-radio formControlName="handTime" [(ngModel)]="handTime">
+                        <span>定时检查</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-item>
+                      <nz-form-label>定时类型</nz-form-label>
+                      <nz-form-control [nzPush]="1">
+                        <nz-radio-group formControlName="timeCheck" (ngModelChange)="triggerPollChange($event)"
+                                        [(ngModel)]="timeCheck">
+                          <label nz-radio [nzValue]="'period'">
+                            <span>周期</span>
+                          </label>
+                          <label nz-radio [nzValue]="'custom'">
+                            <span>自定义</span>
+                          </label>
+                        </nz-radio-group>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item *ngIf="timeCheckInit">
+                      <nz-form-label>触发时间</nz-form-label>
+                      <nz-form-control [nzPush]="1">
+                        <input formControlName="triggerPoll" [ngModel]="modelData.triggerPoll" nz-input
+                               placeholder="cron表达式">
+                        <nz-form-explain *ngIf="getInvalidMessage('triggerPoll')">
+                          {{getInvalidMessage('triggerPoll').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="!timeCheckInit">
+                      <nz-form-item>
+                        <nz-form-label>周期类型</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-radio-group formControlName="periodTime" (ngModelChange)="periodTrigger($event)"
+                                          [(ngModel)]="periodStyle">
+                            <label nz-radio [nzValue]="'minute'">
+                              <span>分钟</span>
+                            </label>
+                            <label nz-radio [nzValue]="'hour'">
+                              <span>小时</span>
+                            </label>
+                            <label nz-radio [nzValue]="'day'">
+                              <span>每日</span>
+                            </label>
+                            <label nz-radio [nzValue]="'weekend'">
+                              <span>每周</span>
+                            </label>
+                          </nz-radio-group>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="minuteType">
+                        <nz-form-label nzRequired>间隔分钟</nz-form-label>
+                        <nz-form-control class="time-trigger-style" [nzPush]="1">
+                          <nz-input-number formControlName="minuteStart" [nzMin]="0" [nzMax]="59"
+                                           nzPlaceHolder="开始"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('minuteStart')">
+                            {{getInvalidMessage('minuteStart').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="time-trigger-style" [nzPush]="2">
+                          <nz-input-number formControlName="minuteEnd" [nzMin]="0" [nzMax]="59"
+                                           nzPlaceHolder="间隔数"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('minuteEnd')">
+                            {{getInvalidMessage('minuteEnd').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="hourType">
+                        <nz-form-label nzRequired>间隔小时</nz-form-label>
+                        <nz-form-control class="time-trigger-style" [nzPush]="1">
+                          <nz-input-number formControlName="hourStart" [nzMin]="0" [nzMax]="23"
+                                           nzPlaceHolder="开始"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('hourStart')">
+                            {{getInvalidMessage('hourStart').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="time-trigger-style" [nzPush]="2">
+                          <nz-input-number formControlName="hourEnd" [nzMin]="0" [nzMax]="23"
+                                           nzPlaceHolder="间隔数"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('hourEnd')">
+                            {{getInvalidMessage('hourEnd').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-control></nz-form-control>
+                      <nz-form-item *ngIf="dayType">
+                        <nz-form-label>每日时间</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-time-picker formControlName="dayDate" nzPlaceHolder="请选择时间" [(ngModel)]="dayDate"
+                                          nzFormat="HH:mm"></nz-time-picker>
+                          <nz-form-explain *ngIf="getInvalidMessage('dayDate')">
+                            {{getInvalidMessage('dayDate').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-control></nz-form-control>
+                      <nz-form-item>
+                        <nz-form-label nzRequired *ngIf="weekType">每周</nz-form-label>
+                        <nz-form-control *ngIf="weekType" [nzPush]="1">
+                          <nz-checkbox-group formControlName="weekday" [ngModel]="weekday"></nz-checkbox-group>
+                          <nz-form-explain *ngIf="getInvalidMessage('weekday')">
+                            {{getInvalidMessage('weekday').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="weekType">
+                        <nz-form-label>具体时间</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-time-picker formControlName="weekDate" [(ngModel)]="weekDate"
+                                          [nzFormat]="'HH:mm'"></nz-time-picker>
+                          <nz-form-explain *ngIf="getInvalidMessage('weekDate')">
+                            {{getInvalidMessage('weekDate').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </nz-tab>
+                  <nz-tab [nzTitle]="titleTemplate3">
+                    <ng-template #titleTemplate3>
+                      <label nz-radio formControlName="handCheck" [(ngModel)]="handCheck">
+                        <span>手动检查</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-control class="hand-check"></nz-form-control>
+                    <nz-form-item>
+                      <nz-form-control nz-col [nzSm]="16" [nzXs]="24">
+                        <label nz-checkbox formControlName="triggerManual" [(ngModel)]="triggerManual">触发器选择为手动检查</label>
+                        <nz-form-explain class="hand-check-color" *ngIf="getInvalidMessage('triggerManual')">
+                          {{getInvalidMessage('triggerManual').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-tab>
+                </nz-tabset>
+              </div>
+              <legend>
+                <i class="icon-square"></i>构件
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item *ngIf="artifactNameInput === true">
+                    <nz-form-label nzRequired>构件名称</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="artifactName" [ngModel]="modelData.artifactName"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('artifactName')">
+                        {{getInvalidMessage('artifactName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('artifactName')">
+                      请输入源代码构建生成的构件的名称。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>生成路径</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" nz-input formControlName="artifactPath"
+                             [ngModel]="modelData.artifactPath">
+                      <nz-form-explain *ngIf="getInvalidMessage('artifactPath')">
+                        {{getInvalidMessage('artifactPath').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('artifactPath')">
+                      请输入生成构件的存放路径。</p>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>镜像
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>基础镜像</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="baseImage" [options]="imageOptions"
+                                  [(ngModel)]="modelData.baseImage"></nzi-select>
+                      <nzi-help [options]="{'title': '请选择构建镜像时所使用的基础镜像。'}"></nzi-help>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-control></nz-form-control>
+                    <nz-form-label nzRequired>输出镜像名称</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="outputImageName" [ngModel]="modelData.outputImageName"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('outputImageName')">
+                        {{getInvalidMessage('outputImageName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('outputImageName')">
+                      请填写构建的目标镜像的名称。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>暴露端口</nz-form-label>
+                    <nz-form-control>
+                      <input nz-input class="form-input" [(ngModel)]="modelData.exposePort" formControlName="exposePort">
+                      <nz-form-explain *ngIf="getInvalidMessage('exposePort')">
+                        {{getInvalidMessage('exposePort').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('exposePort')">
+                      请填写暴露端口(端口范围1~65535)，如需输入多个暴露端口，在两个端口之间输入空格，类似8080 8081。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>启动参数</nz-form-label>
+                    <nz-form-control>
+          <textarea rows="4" formControlName="cmdOpts" [ngModel]="modelData.cmdOpts"
+                    nz-input></textarea>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+            </div>
+            <div *ngSwitchCase="'b2i'">
+              <legend>
+                <i class="icon-square"></i>软件包
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>上传方式</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="pkgType" [options]="pkgTypeOptions"
+                                  [(ngModel)]="pkgType" (ngModelChange)="pkgTypeChange($event)"></nzi-select>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('pkgType')">
+                      请选择已有软件包或者创建新的软件包。</p>
+                  </nz-form-item>
+                  <div [ngSwitch]="pkgType">
+                    <div *ngSwitchCase="0">
+                      <nz-form-item>
+                        <nz-form-label nzRequired>软件包名称</nz-form-label>
+                        <nz-form-control>
+                          <input nz-input PlaceHolder="请输入软件包名称" formControlName="pkgName" class="form-input"
+                                 [(ngModel)]="modelData.pkgName">
+                          <nz-form-explain *ngIf="getInvalidMessage('pkgName')">
+                            {{getInvalidMessage('pkgName').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <p class="help-text" [class.help-text-bottom]="getInvalidMessage('pkgName')">
+                          只能以字母开头,仅包含字母、数字、点、下划线及中横线请填入创建新软件包名称。</p>
+                      </nz-form-item>
+                      <nz-form-item>
+                        <nz-form-label nzRequired>软件包版本</nz-form-label>
+                        <nz-form-control>
+                          <input class="form-input" placeholder="请输入版本号，例如：v1.0" nz-input formControlName="pkgVersion"
+                                 [(ngModel)]="modelData.pkgVersion">
+                          <nz-form-explain *ngIf="getInvalidMessage('pkgVersion')">
+                            {{getInvalidMessage('pkgVersion').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <p class="help-text" [class.help-version-text-bottom]="getInvalidMessage('pkgVersion')">
+                          请输入正确的版本号（可以v或者V或者数字开头，字母、数字、点号、中短线、加号组成,例：v1.0,v1.0.0,1.0.0-alpha,1.0.0-alpha+001）。</p>
+                      </nz-form-item>
+                      <nz-form-item>
+                        <nz-form-label nzRequired>文件</nz-form-label>
+                        <nz-form-control>
+                          <input class="form-input" formControlName="fileName" [(ngModel)]="fileName"
+                                 placeholder="请选择程序包文件" disabled nz-input>
+                          <button class="file-upload-button" [nzType]="'primary'" (click)="fileInput.click()" nz-button>选择
+                          </button>
+                          <span class="file-upload-span">
+                          <input type="file" #fileInput ng2FileSelect [uploader]="uploader">
+                        </span>
+                          <nz-form-explain class="file-upload-input"
+                                           *ngIf="getInvalidMessage('fileName')">{{getInvalidMessage('fileName').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item>
+                        <nz-form-label nzRequired>上传软件包</nz-form-label>
+                        <nz-form-control>
+                          <button [nzType]="'primary'" (click)="save()" nz-button>
+                            <i class="anticon anticon-upload"></i>上传
+                          </button>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div *ngSwitchCase="1">
+                      <nz-form-item>
+                        <nz-form-label nzRequired>软件包名称</nz-form-label>
+                        <nz-form-control>
+                          <nzi-select formControlName="pkgHasName" [options]="pkgOptions"
+                                      [(ngModel)]="modelData.pkgHasName"
+                                      (ngModelChange)="pkgNameChange($event)"></nzi-select>
+                          <nz-form-explain *ngIf="getInvalidMessage('pkgHasName')">
+                            {{getInvalidMessage('pkgHasName').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <p class="help-text" [class.help-text-bottom]="getInvalidMessage('pkgHasName')">
+                          请选择已有软件包。</p>
+                      </nz-form-item>
+                      <nz-form-item>
+                        <nz-form-label nzRequired>软件包版本</nz-form-label>
+                        <nz-form-control>
+                          <nzi-select placeholder="请输入版本号，例如：v1.0" formControlName="pkgHasVersion"
+                                      [options]="versionOptions" [(ngModel)]="modelData.pkgHasVersion"></nzi-select>
+                          <nz-form-explain *ngIf="getInvalidMessage('pkgHasVersion')">
+                            {{getInvalidMessage('pkgHasVersion').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div *ngSwitchDefault></div>
+                  </div>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>镜像
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>基础镜像</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="baseImage" [options]="imageOptions"
+                                  [(ngModel)]="modelData.baseImage"></nzi-select>
+                      <nzi-help [options]="{'title': '请选择构建镜像时所使用的基础镜像。'}"></nzi-help>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-control></nz-form-control>
+                    <nz-form-label nzRequired>输出镜像名称</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="outputImageName" [ngModel]="modelData.outputImageName"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('outputImageName')">
+                        {{getInvalidMessage('outputImageName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('outputImageName')">
+                      请填写构建的目标镜像的名称。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>暴露端口</nz-form-label>
+                    <nz-form-control>
+                      <input nz-input class="form-input" [(ngModel)]="modelData.exposePort" formControlName="exposePort">
+                      <nz-form-explain *ngIf="getInvalidMessage('exposePort')">
+                        {{getInvalidMessage('exposePort').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('exposePort')">
+                      请填写暴露端口(端口范围1~65535)，如需输入多个暴露端口，在两个端口之间输入空格，类似8080 8081。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>启动参数</nz-form-label>
+                    <nz-form-control [nzSm]="10" [nzXs]="24">
+          <textarea rows="4" formControlName="cmdOpts" [ngModel]="modelData.cmdOpts"
+                    nz-input></textarea>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+            </div>
+            <div *ngSwitchCase="'s2b'">
+              <legend>
+                <i class="icon-square"></i>源码库配置
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>源码库类型</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="scmType" [options]="typeOptions"
+                                  [(ngModel)]="modelData.scmType"></nzi-select>
+                      <nzi-help [options]="{'title': '请按照存放源代码所使用的源码库类型进行选择。'}"></nzi-help>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmType')">
+                        {{getInvalidMessage('scmType').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-control></nz-form-control>
+                  <nz-form-item>
+                    <nz-form-label>是否认证</nz-form-label>
+                    <nz-form-control>
+                      <nz-switch formControlName="check" [(ngModel)]="check"
+                                 (ngModelChange)="identification($event)"></nz-switch>
+                      <nzi-help [options]="{'title': '如果构建镜像时需要拉取代码，需要认证填入具有读取源代码权限的用户的身份信息。'}"></nzi-help>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item *ngIf="authentication===true">
+                    <nz-form-label>用户名</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" placeholder="请输入用户名" formControlName="scmUsername"
+                             (ngModelChange)="testButtonChange()"
+                             [(ngModel)]="modelData.scmUsername" nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmUsername')">
+                        {{getInvalidMessage('scmUsername').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item *ngIf="authentication===true">
+                    <nz-form-label>密码</nz-form-label>
+                    <nz-form-control nz-col>
+                      <input class="form-input" placeholder="请输入密码" type="password" name="scmPassword"
+                             formControlName="scmPassword"
+                             [(ngModel)]="modelData.scmPassword" (ngModelChange)="testButtonChange()"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmPassword')">
+                        {{getInvalidMessage('scmPassword').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>token</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" placeHolder="请输入token(必填)" formControlName="apiToken"
+                             [(ngModel)]="modelData.apiToken" (ngModelChange)="apiTokenChange()" nz-input>
+                      <nzi-help [options]="{'title': titleContent}"></nzi-help>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('apiToken')">
+                        {{getInvalidMessage('apiToken').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('apiToken')">可访问源码库的API
+                      token，如需自动创建WebHook实现git事件触发构建时请填写。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>项目地址</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="projectUrl" [(ngModel)]="modelData.projectUrl"
+                             (ngModelChange)="testButtonChange()"
+                             nz-input>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('projectUrl')">
+                        {{getInvalidMessage('projectUrl').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('projectUrl')">
+                      填写存放源代码的项目git地址。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>分支名称</nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group *ngIf="branchInput" [nzSuffix]="suffixTemplate">
+                        <input (click)="getBranch()" nz-input formControlName="branchName" class="form-input"
+                               placeHolder="请输入分支名称或获取分支选择" [(ngModel)]="modelData.branchName">
+                      </nz-input-group>
+                      <nz-select *ngIf="!branchInput" nzShowSearch nzAllowClear (click)="getBranch()"
+                                 formControlName="branchName" [nzMaxMultipleCount]="1" class="form-input"
+                                 nzPlaceHolder="请输入token和项目地址来获取分支" [(ngModel)]="modelData.branchName">
+                        <nz-option *ngFor="let option of branchOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                        <nz-option *ngIf="isLoadingBranch === true" nzDisabled nzCustomContent><i
+                          class="anticon anticon-loading anticon-spin loading-icon"></i> Loading Data...
+                        </nz-option>
+                      </nz-select>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('branchName')">
+                        {{getInvalidMessage('branchName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <span class="branch-error-message" *ngIf="errorNum<0 && testCode===false">{{errorMessage}}</span>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('branchName')">
+                      填写用于构建的分支/tag的名称或者输入token与项目地址拉取分支。</p>
+                  </nz-form-item>
+                  <nz-form-item class="test-location">
+                    <nz-form-control class="button-length">
+                      <button [disabled]="testCode" nzSize="default" nz-button nzType="primary"
+                              (click)="apiTokenValidator()" [nzLoading]="isLoadingTest">测试
+                      </button>
+                      <nzi-help [options]="{'title': '测试token与项目地址是否匹配正确'}"></nzi-help>
+                    </nz-form-control>
+                    <span class="api-error-message" *ngIf="resultNum < 0 && testCode===false">token:{{apiMessage}}</span>
+                    <span class="api-success-message"
+                          *ngIf="resultNum ===0 && testCode===false">token:{{apiMessage}}</span>
+                    <!--<span class="user-error-message" *ngIf="userNum < 0 && testCode===false">用户名密码:{{userMessage}}</span>-->
+                    <!--<span class="user-success-message"-->
+                    <!--*ngIf="userNum ===0 && testCode===false">用户名密码:{{userMessage}}</span>-->
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>语言和构建工具
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>开发语言</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="language" [options]="languageOptions" [(ngModel)]="modelData.language"
+                                  (ngModelChange)="languageType($event)"></nzi-select>
+                      <nzi-help [options]="{'title': '请根据源代码的编程语言进行选择。'}"></nzi-help>
+                      <nz-form-explain class="select-error" *ngIf="getInvalidMessage('language')">
+                        {{getInvalidMessage('language').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>构建工具</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="buildTool" [options]="toolOptions"
+                                  [(ngModel)]="modelData.buildTool"
+                                  (ngModelChange)="buildToolChange($event)"></nzi-select>
+                      <nzi-help [options]="{'title': '请根据构建源代码所使用的构建工具进行选择。'}"></nzi-help>
+                      <nz-form-explain class="select-error" *ngIf="getInvalidMessage('buildTool')">
+                        {{getInvalidMessage('buildTool').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>构建脚本</nz-form-label>
+                    <nz-form-control>
+        <textarea nz-input rows="10" wrap="hard" formControlName="buildScript"
+                  [(ngModel)]="modelData.buildScript"></textarea>
+                      <nz-form-explain *ngIf="getInvalidMessage('buildScript')">
+                        {{getInvalidMessage('buildScript').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>触发器
+              </legend>
+              <div nz-col>
+                <nz-tabset [nzShowPagination]="'false'" nzSize="'default'" [nzTabPosition]="'left'" [nzType]="'line'"
+                           [(nzSelectedIndex)]="trigger" (nzSelectedIndexChange)="triggerCheck()">
+                  <nz-tab [nzTitle]="titleTemplate">
+                    <ng-template #titleTemplate>
+                      <label nz-radio [nzDisabled]="gitEventOrNot" formControlName="handGit" [(ngModel)]="handGit"
+                             (ngModelChange)="gitEventChange()">
+                        <span>git事件</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-item>
+                      <nz-form-control>
+                        <nz-checkbox-group formControlName="triggerGitevent"
+                                           [(ngModel)]="checkOptions"></nz-checkbox-group>
+                        <nz-form-explain *ngIf="getInvalidMessage('triggerGitevent')">
+                          {{getInvalidMessage('triggerGitevent').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-tab>
+                  <nz-tab [nzTitle]="titleTemplate2">
+                    <ng-template #titleTemplate2>
+                      <label nz-radio formControlName="handTime" [(ngModel)]="handTime">
+                        <span>定时检查</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-item>
+                      <nz-form-label>定时类型</nz-form-label>
+                      <nz-form-control [nzPush]="1">
+                        <nz-radio-group formControlName="timeCheck" (ngModelChange)="triggerPollChange($event)"
+                                        [(ngModel)]="timeCheck">
+                          <label nz-radio [nzValue]="'period'">
+                            <span>周期</span>
+                          </label>
+                          <label nz-radio [nzValue]="'custom'">
+                            <span>自定义</span>
+                          </label>
+                        </nz-radio-group>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item *ngIf="timeCheckInit">
+                      <nz-form-label>触发时间</nz-form-label>
+                      <nz-form-control [nzPush]="1">
+                        <input formControlName="triggerPoll" [ngModel]="modelData.triggerPoll" nz-input
+                               placeholder="cron表达式">
+                        <nz-form-explain *ngIf="getInvalidMessage('triggerPoll')">
+                          {{getInvalidMessage('triggerPoll').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="!timeCheckInit">
+                      <nz-form-item>
+                        <nz-form-label>周期类型</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-radio-group formControlName="periodTime" (ngModelChange)="periodTrigger($event)"
+                                          [(ngModel)]="periodStyle">
+                            <label nz-radio [nzValue]="'minute'">
+                              <span>分钟</span>
+                            </label>
+                            <label nz-radio [nzValue]="'hour'">
+                              <span>小时</span>
+                            </label>
+                            <label nz-radio [nzValue]="'day'">
+                              <span>每日</span>
+                            </label>
+                            <label nz-radio [nzValue]="'weekend'">
+                              <span>每周</span>
+                            </label>
+                          </nz-radio-group>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="minuteType">
+                        <nz-form-label nzRequired>间隔分钟</nz-form-label>
+                        <nz-form-control class="time-trigger-style" [nzPush]="1">
+                          <nz-input-number formControlName="minuteStart" [nzMin]="0" [nzMax]="59"
+                                           nzPlaceHolder="开始"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('minuteStart')">
+                            {{getInvalidMessage('minuteStart').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="time-trigger-style" [nzPush]="2">
+                          <nz-input-number formControlName="minuteEnd" [nzMin]="0" [nzMax]="59"
+                                           nzPlaceHolder="间隔数"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('minuteEnd')">
+                            {{getInvalidMessage('minuteEnd').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="hourType">
+                        <nz-form-label nzRequired>间隔小时</nz-form-label>
+                        <nz-form-control class="time-trigger-style" [nzPush]="1">
+                          <nz-input-number formControlName="hourStart" [nzMin]="0" [nzMax]="23"
+                                           nzPlaceHolder="开始"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('hourStart')">
+                            {{getInvalidMessage('hourStart').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="time-trigger-style" [nzPush]="2">
+                          <nz-input-number formControlName="hourEnd" [nzMin]="0" [nzMax]="23"
+                                           nzPlaceHolder="间隔数"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('hourEnd')">
+                            {{getInvalidMessage('hourEnd').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-control></nz-form-control>
+                      <nz-form-item *ngIf="dayType">
+                        <nz-form-label>每日时间</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-time-picker formControlName="dayDate" nzPlaceHolder="请选择时间" [(ngModel)]="dayDate"
+                                          nzFormat="HH:mm"></nz-time-picker>
+                          <nz-form-explain *ngIf="getInvalidMessage('dayDate')">
+                            {{getInvalidMessage('dayDate').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-control></nz-form-control>
+                      <nz-form-item>
+                        <nz-form-label nzRequired *ngIf="weekType">每周</nz-form-label>
+                        <nz-form-control *ngIf="weekType" [nzPush]="1">
+                          <nz-checkbox-group formControlName="weekday" [ngModel]="weekday"></nz-checkbox-group>
+                          <nz-form-explain *ngIf="getInvalidMessage('weekday')">
+                            {{getInvalidMessage('weekday').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="weekType">
+                        <nz-form-label>具体时间</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-time-picker formControlName="weekDate" [(ngModel)]="weekDate"
+                                          [nzFormat]="'HH:mm'"></nz-time-picker>
+                          <nz-form-explain *ngIf="getInvalidMessage('weekDate')">
+                            {{getInvalidMessage('weekDate').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </nz-tab>
+                  <nz-tab [nzTitle]="titleTemplate3">
+                    <ng-template #titleTemplate3>
+                      <label nz-radio formControlName="handCheck" [(ngModel)]="handCheck">
+                        <span>手动检查</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-control class="hand-check"></nz-form-control>
+                    <nz-form-item>
+                      <nz-form-control nz-col [nzSm]="16" [nzXs]="24">
+                        <label nz-checkbox formControlName="triggerManual" [(ngModel)]="triggerManual">触发器选择为手动检查</label>
+                        <nz-form-explain class="hand-check-color" *ngIf="getInvalidMessage('triggerManual')">
+                          {{getInvalidMessage('triggerManual').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-tab>
+                </nz-tabset>
+              </div>
+              <legend>
+                <i class="icon-square"></i>构件
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item *ngIf="artifactNameInput === true">
+                    <nz-form-label nzRequired>构件名称</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="artifactName" [ngModel]="modelData.artifactName"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('artifactName')">
+                        {{getInvalidMessage('artifactName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('artifactName')">
+                      请输入源代码构建生成的构件的名称。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>生成路径</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" nz-input formControlName="artifactPath"
+                             [ngModel]="modelData.artifactPath">
+                      <nz-form-explain *ngIf="getInvalidMessage('artifactPath')">
+                        {{getInvalidMessage('artifactPath').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('artifactPath')">
+                      请输入生成构件的存放路径。</p>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+            </div>
+            <div *ngSwitchDefault>
+              <legend>
+                <i class="icon-square"></i>源码库配置
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>源码库类型</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="scmType" [options]="typeOptions"
+                                  [(ngModel)]="modelData.scmType"></nzi-select>
+                      <nzi-help [options]="{'title': '请按照存放源代码所使用的源码库类型进行选择。'}"></nzi-help>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmType')">
+                        {{getInvalidMessage('scmType').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-control></nz-form-control>
+                  <nz-form-item>
+                    <nz-form-label>是否认证</nz-form-label>
+                    <nz-form-control>
+                      <nz-switch formControlName="check" [(ngModel)]="check"
+                                 (ngModelChange)="identification($event)"></nz-switch>
+                      <nzi-help [options]="{'title': '如果构建镜像时需要拉取代码，需要认证填入具有读取源代码权限的用户的身份信息。'}"></nzi-help>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item *ngIf="authentication===true">
+                    <nz-form-label>用户名</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" placeholder="请输入用户名" formControlName="scmUsername"
+                             (ngModelChange)="testButtonChange()"
+                             [(ngModel)]="modelData.scmUsername" nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmUsername')">
+                        {{getInvalidMessage('scmUsername').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item *ngIf="authentication===true">
+                    <nz-form-label>密码</nz-form-label>
+                    <nz-form-control nz-col>
+                      <input class="form-input" placeholder="请输入密码" type="password" name="scmPassword"
+                             formControlName="scmPassword"
+                             [(ngModel)]="modelData.scmPassword" (ngModelChange)="testButtonChange()"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('scmPassword')">
+                        {{getInvalidMessage('scmPassword').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>token</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" placeHolder="请输入token(必填)" formControlName="apiToken"
+                             [(ngModel)]="modelData.apiToken" (ngModelChange)="apiTokenChange()" nz-input>
+                      <nzi-help [options]="{'title': titleContent}"></nzi-help>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('apiToken')">
+                        {{getInvalidMessage('apiToken').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('apiToken')">可访问源码库的API
+                      token，如需自动创建WebHook实现git事件触发构建时请填写。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>项目地址</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="projectUrl" [(ngModel)]="modelData.projectUrl"
+                             (ngModelChange)="testButtonChange()"
+                             nz-input>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('projectUrl')">
+                        {{getInvalidMessage('projectUrl').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('projectUrl')">
+                      填写存放源代码的项目git地址。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>分支名称</nz-form-label>
+                    <nz-form-control>
+                      <nz-input-group *ngIf="branchInput" [nzSuffix]="suffixTemplate">
+                        <input (click)="getBranch()" nz-input formControlName="branchName" class="form-input"
+                               placeHolder="请输入分支名称或获取分支选择" [(ngModel)]="modelData.branchName">
+                      </nz-input-group>
+                      <nz-select *ngIf="!branchInput" nzShowSearch nzAllowClear (click)="getBranch()"
+                                 formControlName="branchName" [nzMaxMultipleCount]="1" class="form-input"
+                                 nzPlaceHolder="请输入token和项目地址来获取分支" [(ngModel)]="modelData.branchName">
+                        <nz-option *ngFor="let option of branchOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                        <nz-option *ngIf="isLoadingBranch === true" nzDisabled nzCustomContent><i
+                          class="anticon anticon-loading anticon-spin loading-icon"></i> Loading Data...
+                        </nz-option>
+                      </nz-select>
+                      <nz-form-explain
+                        *ngIf="getInvalidMessage('branchName')">
+                        {{getInvalidMessage('branchName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <span class="branch-error-message" *ngIf="errorNum<0 && testCode===false">{{errorMessage}}</span>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('branchName')">
+                      填写用于构建的分支/tag的名称或者输入token与项目地址拉取分支。</p>
+                  </nz-form-item>
+                  <nz-form-item class="test-location">
+                    <nz-form-control class="button-length">
+                      <button [disabled]="testCode" nzSize="default" nz-button nzType="primary"
+                              (click)="apiTokenValidator()" [nzLoading]="isLoadingTest">测试
+                      </button>
+                      <nzi-help [options]="{'title': '测试token与项目地址是否匹配正确'}"></nzi-help>
+                    </nz-form-control>
+                    <span class="api-error-message" *ngIf="resultNum < 0 && testCode===false">token:{{apiMessage}}</span>
+                    <span class="api-success-message"
+                          *ngIf="resultNum ===0 && testCode===false">token:{{apiMessage}}</span>
+                    <!--<span class="user-error-message" *ngIf="userNum < 0 && testCode===false">用户名密码:{{userMessage}}</span>-->
+                    <!--<span class="user-success-message"-->
+                    <!--*ngIf="userNum ===0 && testCode===false">用户名密码:{{userMessage}}</span>-->
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>语言和构建工具
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>开发语言</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="language" [options]="languageOptions" [(ngModel)]="modelData.language"
+                                  (ngModelChange)="languageType($event)"></nzi-select>
+                      <nzi-help [options]="{'title': '请根据源代码的编程语言进行选择。'}"></nzi-help>
+                      <nz-form-explain class="select-error" *ngIf="getInvalidMessage('language')">
+                        {{getInvalidMessage('language').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>构建工具</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="buildTool" [options]="toolOptions"
+                                  [(ngModel)]="modelData.buildTool"
+                                  (ngModelChange)="buildToolChange($event)"></nzi-select>
+                      <nzi-help [options]="{'title': '请根据构建源代码所使用的构建工具进行选择。'}"></nzi-help>
+                      <nz-form-explain class="select-error" *ngIf="getInvalidMessage('buildTool')">
+                        {{getInvalidMessage('buildTool').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>构建脚本</nz-form-label>
+                    <nz-form-control>
+        <textarea nz-input rows="10" wrap="hard" formControlName="buildScript"
+                  [(ngModel)]="modelData.buildScript"></textarea>
+                      <nz-form-explain *ngIf="getInvalidMessage('buildScript')">
+                        {{getInvalidMessage('buildScript').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>触发器
+              </legend>
+              <div nz-col>
+                <nz-tabset [nzShowPagination]="'false'" nzSize="'default'" [nzTabPosition]="'left'" [nzType]="'line'"
+                           [(nzSelectedIndex)]="trigger" (nzSelectedIndexChange)="triggerCheck()">
+                  <nz-tab [nzTitle]="titleTemplate">
+                    <ng-template #titleTemplate>
+                      <label nz-radio [nzDisabled]="gitEventOrNot" formControlName="handGit" [(ngModel)]="handGit"
+                             (ngModelChange)="gitEventChange()">
+                        <span>git事件</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-item>
+                      <nz-form-control>
+                        <nz-checkbox-group formControlName="triggerGitevent"
+                                           [(ngModel)]="checkOptions"></nz-checkbox-group>
+                        <nz-form-explain *ngIf="getInvalidMessage('triggerGitevent')">
+                          {{getInvalidMessage('triggerGitevent').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-tab>
+                  <nz-tab [nzTitle]="titleTemplate2">
+                    <ng-template #titleTemplate2>
+                      <label nz-radio formControlName="handTime" [(ngModel)]="handTime">
+                        <span>定时检查</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-item>
+                      <nz-form-label>定时类型</nz-form-label>
+                      <nz-form-control [nzPush]="1">
+                        <nz-radio-group formControlName="timeCheck" (ngModelChange)="triggerPollChange($event)"
+                                        [(ngModel)]="timeCheck">
+                          <label nz-radio [nzValue]="'period'">
+                            <span>周期</span>
+                          </label>
+                          <label nz-radio [nzValue]="'custom'">
+                            <span>自定义</span>
+                          </label>
+                        </nz-radio-group>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item *ngIf="timeCheckInit">
+                      <nz-form-label>触发时间</nz-form-label>
+                      <nz-form-control [nzPush]="1">
+                        <input formControlName="triggerPoll" [ngModel]="modelData.triggerPoll" nz-input
+                               placeholder="cron表达式">
+                        <nz-form-explain *ngIf="getInvalidMessage('triggerPoll')">
+                          {{getInvalidMessage('triggerPoll').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <div *ngIf="!timeCheckInit">
+                      <nz-form-item>
+                        <nz-form-label>周期类型</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-radio-group formControlName="periodTime" (ngModelChange)="periodTrigger($event)"
+                                          [(ngModel)]="periodStyle">
+                            <label nz-radio [nzValue]="'minute'">
+                              <span>分钟</span>
+                            </label>
+                            <label nz-radio [nzValue]="'hour'">
+                              <span>小时</span>
+                            </label>
+                            <label nz-radio [nzValue]="'day'">
+                              <span>每日</span>
+                            </label>
+                            <label nz-radio [nzValue]="'weekend'">
+                              <span>每周</span>
+                            </label>
+                          </nz-radio-group>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="minuteType">
+                        <nz-form-label nzRequired>间隔分钟</nz-form-label>
+                        <nz-form-control class="time-trigger-style" [nzPush]="1">
+                          <nz-input-number formControlName="minuteStart" [nzMin]="0" [nzMax]="59"
+                                           nzPlaceHolder="开始"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('minuteStart')">
+                            {{getInvalidMessage('minuteStart').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="time-trigger-style" [nzPush]="2">
+                          <nz-input-number formControlName="minuteEnd" [nzMin]="0" [nzMax]="59"
+                                           nzPlaceHolder="间隔数"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('minuteEnd')">
+                            {{getInvalidMessage('minuteEnd').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="hourType">
+                        <nz-form-label nzRequired>间隔小时</nz-form-label>
+                        <nz-form-control class="time-trigger-style" [nzPush]="1">
+                          <nz-input-number formControlName="hourStart" [nzMin]="0" [nzMax]="23"
+                                           nzPlaceHolder="开始"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('hourStart')">
+                            {{getInvalidMessage('hourStart').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="time-trigger-style" [nzPush]="2">
+                          <nz-input-number formControlName="hourEnd" [nzMin]="0" [nzMax]="23"
+                                           nzPlaceHolder="间隔数"></nz-input-number>
+                          <nz-form-explain class="specific-explain" *ngIf="getInvalidMessage('hourEnd')">
+                            {{getInvalidMessage('hourEnd').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-control></nz-form-control>
+                      <nz-form-item *ngIf="dayType">
+                        <nz-form-label>每日时间</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-time-picker formControlName="dayDate" nzPlaceHolder="请选择时间" [(ngModel)]="dayDate"
+                                          nzFormat="HH:mm"></nz-time-picker>
+                          <nz-form-explain *ngIf="getInvalidMessage('dayDate')">
+                            {{getInvalidMessage('dayDate').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-control></nz-form-control>
+                      <nz-form-item>
+                        <nz-form-label nzRequired *ngIf="weekType">每周</nz-form-label>
+                        <nz-form-control *ngIf="weekType" [nzPush]="1">
+                          <nz-checkbox-group formControlName="weekday" [ngModel]="weekday"></nz-checkbox-group>
+                          <nz-form-explain *ngIf="getInvalidMessage('weekday')">
+                            {{getInvalidMessage('weekday').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="weekType">
+                        <nz-form-label>具体时间</nz-form-label>
+                        <nz-form-control [nzPush]="1">
+                          <nz-time-picker formControlName="weekDate" [(ngModel)]="weekDate"
+                                          [nzFormat]="'HH:mm'"></nz-time-picker>
+                          <nz-form-explain *ngIf="getInvalidMessage('weekDate')">
+                            {{getInvalidMessage('weekDate').message}}
+                          </nz-form-explain>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  </nz-tab>
+                  <nz-tab [nzTitle]="titleTemplate3">
+                    <ng-template #titleTemplate3>
+                      <label nz-radio formControlName="handCheck" [(ngModel)]="handCheck">
+                        <span>手动检查</span>
+                      </label>
+                    </ng-template>
+                    <nz-form-control class="hand-check"></nz-form-control>
+                    <nz-form-item>
+                      <nz-form-control nz-col [nzSm]="16" [nzXs]="24">
+                        <label nz-checkbox formControlName="triggerManual" [(ngModel)]="triggerManual">触发器选择为手动检查</label>
+                        <nz-form-explain class="hand-check-color" *ngIf="getInvalidMessage('triggerManual')">
+                          {{getInvalidMessage('triggerManual').message}}
+                        </nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </nz-tab>
+                </nz-tabset>
+              </div>
+              <legend>
+                <i class="icon-square"></i>构件
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item *ngIf="artifactNameInput === true">
+                    <nz-form-label nzRequired>构件名称</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="artifactName" [ngModel]="modelData.artifactName"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('artifactName')">
+                        {{getInvalidMessage('artifactName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('artifactName')">
+                      请输入源代码构建生成的构件的名称。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>生成路径</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" nz-input formControlName="artifactPath"
+                             [ngModel]="modelData.artifactPath">
+                      <nz-form-explain *ngIf="getInvalidMessage('artifactPath')">
+                        {{getInvalidMessage('artifactPath').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('artifactPath')">
+                      请输入生成构件的存放路径。</p>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+              <legend>
+                <i class="icon-square"></i>镜像
+              </legend>
+              <fieldset>
+                <div class="form-static">
+                  <nz-form-item>
+                    <nz-form-label nzRequired>基础镜像</nz-form-label>
+                    <nz-form-control>
+                      <nzi-select formControlName="baseImage" [options]="imageOptions"
+                                  [(ngModel)]="modelData.baseImage"></nzi-select>
+                      <nzi-help [options]="{'title': '请选择构建镜像时所使用的基础镜像。'}"></nzi-help>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-control></nz-form-control>
+                    <nz-form-label nzRequired>输出镜像名称</nz-form-label>
+                    <nz-form-control>
+                      <input class="form-input" formControlName="outputImageName" [ngModel]="modelData.outputImageName"
+                             nz-input>
+                      <nz-form-explain *ngIf="getInvalidMessage('outputImageName')">
+                        {{getInvalidMessage('outputImageName').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('outputImageName')">
+                      请填写构建的目标镜像的名称。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label nzRequired>暴露端口</nz-form-label>
+                    <nz-form-control>
+                      <input nz-input class="form-input" [(ngModel)]="modelData.exposePort" formControlName="exposePort">
+                      <nz-form-explain *ngIf="getInvalidMessage('exposePort')">
+                        {{getInvalidMessage('exposePort').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                    <p class="help-text" [class.help-text-bottom]="getInvalidMessage('exposePort')">
+                      请填写暴露端口(端口范围1~65535)，如需输入多个暴露端口，在两个端口之间输入空格，类似8080 8081。</p>
+                  </nz-form-item>
+                  <nz-form-item>
+                    <nz-form-label>启动参数</nz-form-label>
+                    <nz-form-control>
+          <textarea rows="4" formControlName="cmdOpts" [ngModel]="modelData.cmdOpts"
+                    nz-input></textarea>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </fieldset>
+        <nz-form-item>
+          <div class="button-form">
+            <div nz-col [nzSm]="2" [nzXs]="6">
+              <button nz-button nzType="primary" (click)="handleOk()">
+                <span>提交</span>
+              </button>
+            </div>
+            <div nz-col [nzSm]="2" [nzXs]="6">
+              <button nz-button (click)="handleCancel()">
+                <span>返回</span>
+              </button>
+            </div>
+          </div>
+        </nz-form-item>
+      </form>
+    </nzi-form>
+  </div>
+</nz-spin>
+
+

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>云海开放平台</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css"> -->
+
+</head>
+<body>
+  <style type="text/css">
+    .browser-tip {
+      position: relative;
+      height: 1200px;
+      width: 100%;
+      z-index: 9999;
+      background: #f0f0f0;
+    }
+    .text-tip {
+      padding-top: 100px;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 40px;
+    }
+    .des-tip {
+      height: 80px;
+      font-size: 16px;
+      text-align: center;
+    }
+    .img-tip img {
+      height: 100px;
+    }
+    .iefix-btn {
+      text-align: center;
+    }
+    .iefix-btn a {
+      width: 120px;
+      height: 30px;
+      padding-top: 6px;
+      margin-right: 10px;
+      display: inline-block;
+      vertical-align: middle;
+      border: 1px solid #000;
+    }
+    .iefix-btn a i {
+      margin-right: 3px;
+    }
+  </style>
+  <script type = "text/javascript">
+    var BrowserMatch = {
+      init: function() {
+        this.browser = this.getBrowser().browser;
+        this.version = this.getBrowser().version;
+        this.ieDm = this.getBrowser().ieDm;
+      },
+      getBrowser: function() {
+        var rMsie = /(msie\s|trident\/7)([\w\.]+)/;
+        var rTrident = /(trident)\/([\w.]+)/;
+        var rFirefox = /(firefox)\/([\w.]+)/;
+        var rOpera = /(opera).+version\/([\w.]+)/;
+        var rNewOpera = /(opr)\/(.+)/;
+        var rChrome = /(chrome)\/([\w.]+)/;
+        var rSafari = /version\/([\w.]+).*(safari)/;
+        var ua = navigator.userAgent.toLowerCase();
+        var matchBS, matchBS2;
+        matchBS = rMsie.exec(ua);
+        if (matchBS != null) {
+          var isIE = true;
+          var isLteIE8 = isIE && !+[1,], dm;
+          if (document.documentMode) {
+            dm = document.documentMode;
+          } else {
+            if ((isLteIE8 && (!document.compatMode || document.compatMode === 'BackCompat'))) dm = 5;
+            if (isLteIE8 && !isIE5 && !XMLHttpRequest) dm = 6;
+            if (isLteIE8 && !isIE6 && !document.documentMode) dm = 7;
+            if (isLteIE8 && document.documentMode) dm = 8;
+            if (!isLteIE8 && (function(){
+                "use strict";
+                return !!this;
+              }())) dm = 9;
+            if (isIE && !!document.attachEvent && (function(){
+                "use strict";
+                return !this;
+              }())) dm = 10;
+            if (isIE && !document.attachEvent) dm = 11;
+          }
+          matchBS2 = rTrident.exec(ua);
+          if (matchBS2 != null) {
+            switch (matchBS2[2]) {
+              case "4.0":
+                return {
+                  browser: "IE",
+                  version: "8",
+                  ieDm: dm
+                };
+                break;
+              case "5.0":
+                return {
+                  browser: "IE",
+                  version: "9",
+                  ieDm: dm
+                };
+                break;
+              case "6.0":
+                return {
+                  browser: "IE",
+                  version: "10",
+                  ieDm: dm
+                };
+                break;
+              case "7.0":
+                return {
+                  browser: "IE",
+                  version: "11",
+                  ieDm: dm
+                };
+                break;
+              default:
+                return {
+                  browser: "IE",
+                  version: "Undefined"
+                };
+            }
+          } else {
+            return {
+              browser: "IE",
+              version: matchBS[2] || "0"
+            };
+          }
+        }
+        matchBS = rFirefox.exec(ua);
+        if ((matchBS != null) && (!(window.attachEvent)) && (!(window.chrome)) && (!(window.opera))) {
+          return {
+            browser: matchBS[1] || "",
+            version: matchBS[2] || "0"
+          };
+        }
+        matchBS = rOpera.exec(ua);
+        if ((matchBS != null) && (!(window.attachEvent))) {
+          return {
+            browser: matchBS[1] || "",
+            version: matchBS[2] || "0"
+          };
+        }
+        matchBS = rChrome.exec(ua);
+        if ((matchBS != null) && ( !! (window.chrome)) && (!(window.attachEvent))) {
+          matchBS2 = rNewOpera.exec(ua);
+          if (matchBS2 == null) {
+            return {
+              browser: matchBS[1] || "",
+              version: matchBS[2] || "0"
+            };
+          } else {
+            return {
+              browser: "Opera",
+              version: matchBS2[2] || "0"
+            };
+          }
+        }
+        matchBS = rSafari.exec(ua);
+        if ((matchBS != null) && (!(window.attachEvent)) && (!(window.chrome)) && (!(window.opera))) {
+          return {
+            browser: matchBS[2] || "",
+            version: matchBS[1] || "0"
+          };
+        }
+      }
+    };
+    BrowserMatch.init();
+    if (BrowserMatch.browser && BrowserMatch.browser == "IE" && (BrowserMatch.version < 10 || BrowserMatch.ieDm <10)) {
+      var bodyElement = document.getElementsByTagName('body');
+      var divElement = document.createElement('div');
+      divElement.className = "browser-tip";
+      divElement.innerHTML = "<div class='text-tip'>请升级您的浏览器</div>" +
+        "<div class='des-tip'>尊敬的 windows 用户，我们强烈建议您升级操作系统或浏览器获得更安全的网络环境和更好的用户体验</div>" +
+        "<div class='iefix-btn'>" +
+        "<a href='https://www.google.cn/intl/zh-CN/chrome/' target='_blank'><i class='fab fa-chrome'></i><span>Chrome浏览器</span></a>" +
+        "<a href='https://www.mozilla.org/zh-CN/firefox/new' target='_blank'><i class='fab fa-firefox'></i><span>火狐浏览器</span></a></div>"
+      bodyElement[0].appendChild(divElement);
+    }
+  </script>
+
+  <app-root></app-root>
+</body>
+</html>

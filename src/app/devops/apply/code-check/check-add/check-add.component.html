@@ -1,0 +1,74 @@
+<div class="add-page-title">
+  <a (click)="handleCancel()"><i class="fas fa-angle-left"></i>返回列表</a>
+  <span *ngIf="type === 'edit'">编辑任务</span>
+  <span *ngIf="!type">创建任务</span>
+</div>
+<nz-alert nzType="info" nzBanner nzShowIcon="false" [nzDescription]='innerTemplate'
+          [ngStyle]="{ 'marginBottom': '16px' }">
+  <ng-template #innerTemplate>
+    代码检查任务创建：选择一个构建关联对应的检查对象、检查语言、触发器类型，目前扫描类型为静态分析，选择检查策略实现代码检查。
+  </ng-template>
+</nz-alert>
+<nz-spin [nzSpinning]="loading&&loadingBuild">
+  <div class="form-fieldset form-horizontal form-align-left">
+    <nzi-form [formName]="validateForm" #NziFormComponent>
+      <form nz-form [formGroup]="validateForm">
+        <legend>
+          <i class="icon-square"></i>基本信息
+        </legend>
+        <fieldset>
+          <div class="form-static">
+            <nz-form-item>
+              <nz-form-label nzRequired>任务名称</nz-form-label>
+              <nz-form-control>
+                <input class="form-input" formControlName="name" [(ngModel)]="modelData.name" id="name" nz-input>
+                <nz-form-explain *ngIf="getInvalidMessage('name')">
+                  {{getInvalidMessage('name').message}}
+                </nz-form-explain>
+              </nz-form-control>
+              <p class="help-text" [class.help-text-bottom]="getInvalidMessage('name')">
+                用于识别任务，只能以字母开头,仅包含字母、数字、下划线及中横线,长度介于1-50之间。
+              </p>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>构建</nz-form-label>
+              <nz-form-control>
+                <nz-select nzPlaceHolder="请选择构建" class="form-input" formControlName="constructId" [(ngModel)]="modelData.constructId"
+                           nzAllowClear nzShowSearch>
+                  <nz-option  *ngFor="let option of buildList" [nzLabel]="option.name"
+                             [nzValue]="option.Id"></nz-option>
+                </nz-select>
+                <nz-form-explain *ngIf="getInvalidMessage('constructId')">
+                  {{getInvalidMessage('constructId').message}}
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>源代码路径</nz-form-label>
+              <nz-form-control>
+                <input class="form-input" formControlName="sonarSources" [(ngModel)]="modelData.sonarSources" nz-input>
+                <nz-form-explain *ngIf="getInvalidMessage('sonarSources')">
+                  {{getInvalidMessage('sonarSources').message}}
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </fieldset>
+        <nz-form-item>
+          <div class="button-form">
+            <div nz-col [nzSm]="2" [nzXs]="6">
+              <button nz-button nzType="primary" (click)="handleOk()">
+                <span>提交</span>
+              </button>
+            </div>
+            <div nz-col [nzSm]="2" [nzXs]="6">
+              <button nz-button (click)="handleCancel()">
+                <span>返回</span>
+              </button>
+            </div>
+          </div>
+        </nz-form-item>
+      </form>
+    </nzi-form>
+  </div>
+</nz-spin>

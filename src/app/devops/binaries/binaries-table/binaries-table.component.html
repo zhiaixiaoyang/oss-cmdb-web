@@ -1,0 +1,77 @@
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+    <a class="btn btn-fileupload" routerLink="upload">上传</a>
+  </div>
+  <div class="pull-right">
+    <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+      <input  nz-input placeholder="输入程序包名字" [(ngModel)]="search">
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzSearch (click)="searchData()">
+        <i class="anticon anticon-search"></i>
+      </button>
+    </ng-template>
+  </div>
+</div>
+<nz-table #nestedTable [nzData]="binariesList" [nzPageSize]="10" [nzLoading]="loading">
+  <thead>
+    <tr>
+      <th nzShowExpand></th>
+      <th><span>名称</span></th>
+      <th><span>版本个数</span></th>
+      <th style="width: 140px;"><span>更新时间</span></th>
+      <th style="width: 140px;"><span>操作</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-template ngFor let-data [ngForOf]="nestedTable.data">
+      <tr>
+        <td nzShowExpand [(nzExpand)]="data.expand"></td>
+        <td>{{data.name}}</td>
+        <td>{{data.versionCount}}</td>
+        <td>{{data.updateTime  | date: 'y-MM-dd HH:mm:ss'}}</td>
+        <td>
+          <app-binaries-opt [binariesData]="data" (delBinaries)="delBinaries(data)" (updateBinariesVersionBtn)="updateBinariesVersion()"  #binariesOpt></app-binaries-opt>
+        </td>
+      </tr>
+      <tr [nzExpand]="data.expand">
+        <td></td>
+        <td colspan="5">
+          <nz-table #innerTable [nzData]="data.binariesVersions" nzSize="middle" [nzPageSize]="5" [nzShowPagination]="true">
+            <thead>
+            <tr>
+              <th style="width: 80px;">版本号</th>
+              <th style="width: 100px;">大小(字节)</th>
+              <th>路径</th>
+              <th>镜像</th>
+              <th style="width: 300px;">描述</th>
+              <th style="width: 140px;">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of innerTable.data">
+                <td>{{data.version}}</td>
+                <td>{{data.size}}</td>
+                <td>{{data.path}}</td>
+                <td>{{data.imageId}}</td>
+                <td>
+                  <nz-popover>
+                    <p nz-popover class="ellipsis">{{data.description}}</p>
+                    <ng-template #nzTemplate>
+                      <div>
+                        <p>{{data.description}}</p>
+                      </div>
+                    </ng-template>
+                  </nz-popover>
+                </td>
+                <td>
+                  <app-binaries-opt [binariesVersionData]="data" (delBinariesVersion)="delBinariesVersion(data)"  #binariesVersionOpt></app-binaries-opt>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </td>
+      </tr>
+    </ng-template>
+  </tbody>
+</nz-table>

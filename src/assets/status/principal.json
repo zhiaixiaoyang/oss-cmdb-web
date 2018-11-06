@@ -1,0 +1,14 @@
+[
+  {"status":true,
+    "label":"启用",
+	"color":"green"
+  },
+  {"status":false,
+    "label":"禁用",
+	"color":"yellow"
+  }
+
+
+
+
+]

@@ -1,0 +1,82 @@
+<h4 class="page-title">
+  <nzi-breadcrumb></nzi-breadcrumb>
+  <div class="page-title-opt pull-right">
+    <button nz-button (click)="historyBack()">
+      返回
+    </button>
+  </div>
+</h4>
+<nz-spin class="spin-location" [nzSpinning]="loading">
+  <div class="form-fieldset form-horizontal form-align-left" *ngFor="let item of data; let n = index">
+    <fieldset>
+      <legend>
+        <i class="icon-square"></i><span *ngIf="item.content.Type === 'build'">{{item.name}}(独立构建)</span>
+        <span *ngIf="item.content.Type === 'pipeline'">{{item.name}}(流水线)</span>
+      </legend>
+      <div  class="container-wrap">
+        <div class="title-row">
+          <div class="item-first"></div>
+          <div class="datas" *ngFor="let datas of item.content.Stages">
+            <nz-tooltip [nzTitle]="datas.name">
+              <div nz-tooltip class="name-content">{{datas.name}}</div>
+            </nz-tooltip>
+          </div>
+        </div>
+        <div *ngIf="noData[n] !== 0" class="time-average">
+          <div class="time-first"></div>
+          <div class="time-percent" *ngFor="let datas of item.content.Stages;">
+            <div class="time-stage">{{datas.averageTime}}</div>
+            <div class="time-content">
+              <nz-progress [nzStrokeWidth]="5" [nzPercent]="datas.timePercent" [nzShowInfo]="false"></nz-progress>
+            </div>
+          </div>
+        </div>
+        <div class="container2"  *ngFor="let datas of item.content.History;let n=index">
+          <div class="first-node">
+            <div class="history-name">{{datas.name}}</div>
+            <a class="history-start-time">
+              <div class="history-content-time">{{datas.startTimeMillis}}</div>
+              <div class="history-content-time-down">{{datas.startTimeMillis2}}</div>
+            </a>
+          </div>
+          <div class="node"  *ngFor="let item2 of datas.stages">
+            <a routerLink="log/{{id}}/{{datas.buildName}}/buildHistory/{{id}}" *ngIf="item2.status == 'SUCCESS' && item.content.Type==='build'"
+               class="nodeEnter">
+              <span>{{item2.durationMillis}}</span>
+            </a>
+            <a routerLink="log/{{datas.pipelineId}}/{{datas.buildName}}/pipelineHistory/{{id}}" *ngIf="item2.status == 'SUCCESS' && item.content.Type==='pipeline'"
+               class="nodeEnter">
+              <span>{{item2.durationMillis}}</span>
+            </a>
+            <a routerLink="log/{{id}}/{{datas.buildName}}/buildHistory/{{id}}" *ngIf="(item2.status == 'IN_PROGRESS' || item2.status == 'PAUSED_PENDING_INPUT') && item.content.Type==='build'"
+               class="nodeEnter">
+              <i class="anticon anticon-loading anticon-spin"></i>
+            </a>
+            <a routerLink="log/{{datas.pipelineId}}/{{datas.buildName}}/pipelineHistory/{{id}}" *ngIf="(item2.status == 'IN_PROGRESS' || item2.status == 'PAUSED_PENDING_INPUT') && item.content.Type==='pipeline'"
+               class="nodeEnter">
+              <i class="anticon anticon-loading anticon-spin"></i>
+            </a>
+            <a routerLink="log/{{id}}/{{datas.buildName}}/buildHistory/{{id}}" *ngIf="item2.status == 'FAILED' && item.content.Type==='build'"
+               class="nodeEnterFailed">
+              <span>{{item2.durationMillis}}</span>
+            </a>
+            <a routerLink="log/{{datas.pipelineId}}/{{datas.buildName}}/pipelineHistory/{{id}}" *ngIf="item2.status == 'FAILED' && item.content.Type==='pipeline'"
+               class="nodeEnterFailed">
+              <span>{{item2.durationMillis}}</span>
+            </a>
+            <a routerLink="log/{{id}}/{{datas.buildName}}/buildHistory/{{id}}" *ngIf="item2.status == 'NIL' && item.content.Type==='build'">
+            </a>
+            <a routerLink="log/{{datas.pipelineId}}/{{datas.buildName}}/pipelineHistory/{{id}}" *ngIf="item2.status == 'NIL' && item.content.Type==='pipeline'">
+            </a>
+          </div>
+        </div>
+        <div *ngIf="noData[n] === 0" class="container2">
+          <span class="no-data">无数据</span>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="null-data" *ngIf="data.length ===0">
+    无数据
+  </div>
+</nz-spin>

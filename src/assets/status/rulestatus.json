@@ -1,0 +1,19 @@
+[
+  {"status":"stop",
+    "label":"禁用",
+    "color":"yellow"
+  },
+  {"status":"run",
+    "label":"启用",
+    "color":"green"
+  },
+  {"status":"pending_running",
+    "label":"正在启用",
+    "color":"blue"
+  },
+  {
+    "status":"failed",
+    "label":"启用失败",
+    "color":"red"
+  }
+]

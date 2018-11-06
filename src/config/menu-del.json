@@ -1,0 +1,23 @@
+{
+  "bigData": {
+    "label": "大数据服务控制台",
+    "icon": "fas fa-table",
+    "sideLists": [
+      {
+        "label": "大数据-HDInsight",
+        "link": "emr",
+        "icon": "fab fa-houzz"
+      },
+      {
+        "label": "大数据-DSI",
+        "link": "mc",
+        "icon": "fab fa-speakap"
+      },
+      {
+        "label": "机器学习",
+        "link": "ml",
+        "icon": "fas fa-laptop"
+      }
+    ]
+  }
+}

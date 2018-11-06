@@ -1,0 +1,16 @@
+.circle-color {
+  color: #108EE9;
+}
+
+.col-em-6 {
+  width: 8.5em;
+}
+
+.git-event-style > div + div {
+  position: relative;
+  left: 1em;
+}
+
+.text-width{
+  width: 500px;
+}

@@ -1,0 +1,15 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<app-nav-header [mainHeight]="mainHeight"></app-nav-header>
+<div id="page-main" [style.height.px]="mainHeight" #pageMain>
+  <app-nav-aside #aside [class.hidden]="aside.sideLists.length==0"></app-nav-aside>
+  <div class="container clearfix">
+    <div class="page-content clearfix" [class.wider]="aside.sideLists.length==0" [style.height.px]="mainHeight">
+      <div [class.breadcrumb-container]="hasBreadcrumb">
+        <app-breadcrumb #appBreadcrumb></app-breadcrumb>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+

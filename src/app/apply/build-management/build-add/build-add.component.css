@@ -1,0 +1,134 @@
+.hand-check {
+  position: relative;
+  height: 105px;
+}
+
+.build-url {
+  font-size: larger;
+  color: red
+}
+
+.time-check {
+  position: relative;
+  height: 60px;
+}
+
+.help-location {
+  position: relative;
+  top: -5px;
+}
+
+.select-help-location {
+  position: relative;
+  top: 3px;
+}
+
+.title-location {
+  margin-left: 32%;
+  margin-top: -50px;
+}
+
+.title-code {
+  font-weight: bolder;
+}
+
+.title-location a {
+  font-family: 微软雅黑;
+  font-size: 16px;
+  transition: all 0.2s ease-out;
+  -webkit-transition: all 0.2s ease-out; /*old huoHu browser*/
+  -moz-transition: all 0.2s ease-out; /* Firefox 4 */
+  -o-transition: all 0.2s ease-out; /*Safari　Chrome browser*/
+}
+
+.button-style {
+  height: 30px;
+  line-height: 30px;
+}
+
+.help-version-text-bottom {
+  margin-top: 70px;
+}
+
+.test-location {
+  left: 120px;
+  position: relative;
+}
+
+.button-length {
+  position: relative;
+  float: left;
+  width: 65px;
+}
+
+.api-error-message {
+  margin-left: 40px;
+  color: red;
+  top: 5px;
+  position: relative;
+}
+
+.api-success-message {
+  margin-left: 40px;
+  color: #3fb613;
+  top: 5px;
+  position: relative;
+}
+
+.user-error-message {
+  margin-left: 40px;
+  color: red;
+  top: 5px;
+  position: relative;
+}
+
+.branch-error-message {
+  color: red;
+  top: 5px;
+  position: absolute;
+}
+
+.user-success-message {
+  margin-left: 40px;
+  color: #3fb613;
+  top: 5px;
+  position: relative;
+}
+
+.file-upload-span{
+  visibility: hidden;
+  position: absolute;
+  overflow: hidden;
+  width: 0;
+  height:0;
+  border:none;
+  margin:0;
+  padding:0
+}
+
+.hand-check-color {
+  color: red;
+}
+
+.select-error {
+  position: relative;
+  left: 10px;
+  top: 8px;
+}
+
+:host ::ng-deep .ant-checkbox-wrapper {
+  margin-top: 10px;
+}
+:host ::ng-deep .ant-tabs-vertical.ant-tabs-left > .ant-tabs-bar .ant-tabs-tab {
+  text-align: left;
+}
+
+.time-trigger-style {
+  width: auto !important;
+  float: left !important;
+}
+
+.specific-explain {
+  margin-left: 0;
+}
+

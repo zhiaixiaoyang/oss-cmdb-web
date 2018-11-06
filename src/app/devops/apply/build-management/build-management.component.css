@@ -1,0 +1,32 @@
+.search-width {
+  width: 220px;
+}
+
+.search-type {
+  width: 120px;
+}
+
+.delete-title {
+  font-size: 14px;
+  color: coral;
+}
+
+.delete-info {
+  height: auto;
+  width: 390px;
+  overflow: hidden;
+  float: left;
+}
+
+.help-tag-bottom {
+  margin-top: 66px;
+}
+
+.disable-li{
+  pointer-events: none;
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  box-shadow: none;
+  opacity: .65;
+  color: rgba(0, 0, 0, 0.25);
+}

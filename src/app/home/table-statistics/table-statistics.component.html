@@ -1,0 +1,73 @@
+<div nz-row nzGutter="12">
+  <div nz-col nzSm="24" nzMd="12">
+    <div class=" home-box">
+      <div class="header">流水线统计</div>
+      <div class="body">
+        <div class="total">
+          <span class="item">{{'IN_PROGRESS' | dict:"pipeline":"name":"display_name" | async }}：
+            <span class="blue">{{pipeline.info.IN_PROGRESS}}</span> 个
+          </span>
+          <span class="item">{{'ERROR' | dict:"pipeline":"name":"display_name" | async }}：
+            <span class="red">{{pipeline.info.ERROR}}</span> 个
+          </span>
+          <span class="item">{{'IN_MANPOWER' | dict:"pipeline":"name":"display_name" | async }}：
+            <span class="green">{{pipeline.info.IN_MANPOWER}}</span> 个
+          </span>
+
+        </div>
+        <div class="tablebox">
+          <nz-table #pipelineTable [nzData]="pipelineData" [nzFrontPagination]="false" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>流水线名称</th>
+                <th>最新运行时间</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of pipelineTable.data">
+                <td>{{data.name}}</td>
+                <td>{{data.date}}</td>
+                <td [innerHtml]="data.status | status: 'pipeline' | async"></td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSm="24" nzMd="12">
+    <div class="home-box">
+      <div class="header">构建统计</div>
+      <div class="body">
+        <div class="total">
+          <ng-container *ngFor="let data of structure.info">
+            <span class="item">{{data.name}}：
+              <span class="blue">{{data.num}}</span> 个
+            </span>
+          </ng-container>
+        </div>
+        <div class="tablebox">
+          <nz-table #structureTable [nzData]="structureData" [nzFrontPagination]="false" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>构建名称</th>
+                <th>源码库类型</th>
+                <th>项目/分支</th>
+                <th>触发条件</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of structureTable.data">
+                <td>{{data.name}}</td>
+                <td>{{data.class}}</td>
+                <td>{{data.project}}</td>
+                <td class="line-height">{{data.event}}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

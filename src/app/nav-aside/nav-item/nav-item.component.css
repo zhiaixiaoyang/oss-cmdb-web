@@ -1,0 +1,136 @@
+p {
+  margin: 0 0 10px;
+}
+.first-li:focus {
+  background: transparent;
+}
+.first-li a {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 11px 2.38% 11px 35px;
+  display: block;
+  font-size: 14px;
+  line-height: 1.28571429;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #cecece;
+}
+.first-li ul li {
+  width: 100%;
+}
+.first-li a > i {
+  display: inline-block;
+  width: 1.28571429em;
+  text-align: center;
+  margin-right: 6px;
+  vertical-align: baseline;
+  font-size: 14px;
+}
+.first-li > a:hover {
+  background: transparent;
+}
+.first-li > a > .icon-arrow {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -7px;
+  margin-right: 8%;
+}
+.first-li > a > .icon-arrow:before {
+  content: "\f107";
+}
+.side-li:hover {
+  background-color: #36b3df;
+}
+.first-li:hover .nav-first-level {
+  color: #36b3df;
+}
+.side-li:hover a {
+  color: #fff;
+}
+.first-li a.nav-first-level:focus {
+  background-color: transparent
+}
+.nav-first-level {
+  margin-left: -25px;
+  padding-left: 4px;
+  width: 220px;
+}
+.nav-second-level {
+  padding-left: 0;
+  background: #2e353f;
+  color: #cecece;
+}
+.nav-second-level > li > a > .fa-dot {
+  width: .3em;
+  vertical-align: top;
+}
+.nav-second-level > li > a {
+  font-size: 12px;
+  padding-top: 13px;
+  padding-left: 60px;
+}
+.nav-second-level > li {
+  margin-bottom: 1px;
+}
+.first-li.ant-menu-item-selected {
+  background-color: #36b3df;
+}
+.first-li.ant-menu-item-selected a {
+  color: #fff;
+}
+.nav-second-level .ant-menu-item a:hover,
+.nav-second-level .ant-menu-item-selected a {
+  color: #fff;
+  background-color: #36b3df;
+}
+.active > a > .icon-arrow:before {
+  content: "\f105";
+}
+li.first-li, .nav-second-level > li {
+  padding-left: 0px!important;
+}
+:host ::ng-deep .ant-menu-submenu > .ant-menu {
+  background-color: inherit;
+}
+:host ::ng-deep .ant-menu-submenu-inline > .ant-menu-submenu-title:after {
+  color: #fff;
+}
+:host ::ng-deep .ant-menu-inline .nav-second-level .ant-menu-item,
+:host ::ng-deep .ant-menu-inline .first-li.ant-menu-item {
+  padding: 0;
+  line-height: 42px;
+  height: 42px;
+}
+:host ::ng-deep .ant-menu-inline .first-li.ant-menu-item {
+  left: 0;
+}
+::ng-deep .ant-menu-inline .first-li.ant-menu-item:after,
+::ng-deep .ant-menu-inline .ant-menu-item:after {
+  border-right: none;
+}
+/*:host ::ng-deep .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  color: #36b3df;
+}
+:host ::ng-deep .first-li.ant-menu-submenu-selected .ant-menu-submenu-title >a {
+  color: #36b3df;
+}
+:host ::ng-deep .first-li.selected .ant-menu-submenu-title >a {
+  color: #36b3df;
+}*/
+:host ::ng-deep .first-li.narrow-li .ant-menu-submenu-title:after {
+  content: '';
+}
+:host ::ng-deep .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow:after,
+:host ::ng-deep .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow:before {
+  background: -webkit-gradient(linear, left top, right top, from(#36b3df), to(#36b3df));
+  background: linear-gradient(to right, #36b3df, #36b3df);
+}
+
+:host ::ng-deep .ant-menu-submenu-inline > .ant-menu-submenu-title:hover .ant-menu-submenu-arrow:after,
+:host ::ng-deep .ant-menu-submenu-inline > .ant-menu-submenu-title:hover .ant-menu-submenu-arrow:before {
+  background: -webkit-gradient(linear, left top, right top, from(#404040), to(#404040));
+  background: linear-gradient(to right, #404040, #404040);
+}

@@ -1,0 +1,92 @@
+<div class="add-page-title">
+  <a (click)="handleCancel()"><i class="fas fa-angle-left"></i>返回列表</a>
+  <span>上传程序包版本</span>
+</div>
+<nz-alert nzType="info" nzBanner nzShowIcon="false" [nzDescription]='innerTemplate' [ngStyle]="{ 'marginBottom': '11px' }">
+  <ng-template #innerTemplate>
+    温馨提示：上传程序包版本文件之前，先选择一个程序包，如果没有，则点击程序包右边的“新建”按钮，进行新建程序包。
+  </ng-template>
+</nz-alert>
+<div class="form-fieldset form-horizontal form-align-left">
+  <nzi-form [formName]="addValidateForm" #NziFormComponentAdd>
+    <form nz-form [formGroup]="addValidateForm">
+      <fieldset>
+        <div class="form-static">
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="name">程序包</nz-form-label>
+            <nz-form-control [nzSm]="11" [nzXs]="24">
+              <nz-select class="file-upload-select" formControlName="name" [(ngModel)]="binariesName" nzShowSearch nzAllowClear nzPlaceHolder="请选择程序包">
+                <nz-option *ngFor="let option of binariesList" [nzLabel]="option.name" [nzValue]="option.name"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="getInvalidMessage('name')">
+                {{getInvalidMessage('name').message}}
+              </nz-form-explain>
+              <button class="file-upload-button" [nzType]="'primary'" (click)="showModal(createBinariesMeta)" nz-button>新建</button>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="version">版本</nz-form-label>
+            <nz-form-control [nzSm]="11" [nzXs]="24" >
+              <input  formControlName="version" id="version" placeholder="请输入版本号，例如：v1.0" nz-input>
+              <nz-form-explain *ngIf="getInvalidMessage('version')">
+                {{getInvalidMessage('version').message}}
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired>文件</nz-form-label>
+            <nz-form-control [nzSm]="11" [nzXs]="24">
+              <input class="file-upload-input" formControlName="fileName" [(ngModel)]="fileName" placeholder="请选择程序包文件" disabled nz-input>
+              <nz-form-explain *ngIf="getInvalidMessage('fileName')">
+                {{getInvalidMessage('fileName').message}}
+              </nz-form-explain>
+              <button class="file-upload-button" [nzType]="'primary'" (click)="fileInput.click()"  nz-button>选择</button>
+              <span class="file-upload-span">
+          <input type="file" #fileInput ng2FileSelect [uploader]="uploader">
+        </span>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzFor="description">描述</nz-form-label>
+            <nz-form-control [nzSm]="11" [nzXs]="24" >
+              <textarea   formControlName="description" id="description" placeholder="请输入描述信息，500个字符以内" nz-input></textarea>
+              <nz-form-explain *ngIf="getInvalidMessage('description')">
+                {{getInvalidMessage('description').message}}
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </fieldset>
+      <nz-form-item>
+        <div class="button-form" >
+          <div nz-col [nzSm]="2" [nzXs]="6" >
+            <button nz-button nzType="primary" (click)="save()">
+              <span>提交</span>
+            </button>
+          </div>
+          <div nz-col [nzSm]="2" [nzXs]="6" >
+            <button nz-button (click)="handleCancel()">
+              <span>返回</span>
+            </button>
+          </div>
+        </div>
+      </nz-form-item>
+    </form>
+  </nzi-form>
+</div>
+<ng-template #createBinariesMeta>
+  <nzi-form [formName]="binariesValidateForm" #NziFormComponentBinaries>
+    <form nz-form [formGroup]="binariesValidateForm">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="name" [nzSm]="4" [nzXs]="24">名称</nz-form-label>
+        <nz-form-control [nzSm]="18" [nzXs]="24" >
+          <input formControlName="name" PlaceHolder="只能以字母开头,仅包含字母、数字、点、下划线及中横线"  nz-input>
+          <nz-form-explain *ngIf="getBinariesInvalidMessage('name')">
+            {{getBinariesInvalidMessage('name').message}}
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nzi-form>
+</ng-template>

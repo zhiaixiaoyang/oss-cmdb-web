@@ -1,0 +1,82 @@
+<div class="table-top clearfix">
+  <div class="pull-left">
+    <a class="btn btn-add" (click)="showModal(modalContent)">新建项目</a>
+    <ng-template #modalContent>
+      <form nz-form [formGroup]="validateForm">
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="name" [nzSm]="6" [nzXs]="24">项目名称</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            <input  formControlName="name" id="name" nz-input>
+            <nz-form-explain *ngIf="getFormControl('name').dirty&&getFormControl('name').hasError('required')">请输入项目名称!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">项目类型</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            <nz-radio-group  formControlName="type">
+              <label nz-radio-button [nzValue]="'K8S'">
+                <span>普通项目</span>
+              </label>
+              <label nz-radio-button [nzValue]="'REPO_ONLY'">
+                <span>镜像仓库</span>
+              </label>
+            </nz-radio-group>
+            <nz-form-explain *ngIf="getFormControl('type').dirty&&getFormControl('type').hasError('required')">请选择项目类型!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24">是否公开</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+            <nz-radio-group  formControlName="is_public">
+              <label nz-radio-button [nzValue]="'false'">
+                <span>私有</span>
+              </label>
+              <label nz-radio-button [nzValue]="'true'">
+                <span>公开</span>
+              </label>
+            </nz-radio-group>
+            <nz-form-explain *ngIf="getFormControl('is_public').dirty&&getFormControl('is_public').hasError('required')">请选择是否公开!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-template>
+  </div>
+</div>
+<nz-table #nzTable [nzFrontPagination]="false" [nzData]="data" nzShowSizeChanger [nzTotal]="_total" [nzLoading]="loading" [(nzPageIndex)]="_current" (nzPageIndexChange)="refreshData()" [(nzPageSize)]="_pageSize" (nzPageSizeChange)="refreshData(true)" nzBordered>
+  <thead>
+  <tr>
+    <th>
+      <span>项目名称</span>
+    </th>
+    <th>
+      <span>项目类型</span>
+    </th>
+    <th>
+      <span>是否公开</span>
+    </th>
+    <th>
+      <span>镜像数量</span>
+    </th>
+    <th>
+      <span>创建时间</span>
+    </th>
+    <th>
+      <span>操作</span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of nzTable.data">
+    <td>
+      <a routerLink="detail/{{data.name}}">{{data.name}}</a>
+    </td>
+    <td>{{data.type}}</td>
+    <td>{{data.is_public}}</td>
+    <td>{{data.repo_count}}</td>
+    <td>{{data.creation_time}}</td>
+    <td>
+      <app-project-opt [rowData]="data" (del)="del(data)" #tableOpt></app-project-opt>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>

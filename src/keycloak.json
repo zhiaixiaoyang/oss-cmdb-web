@@ -1,0 +1,8 @@
+{
+  "realm": "iottest",
+  "auth-server-url": "https://trident.iop.site/auth",
+  "ssl-required": "none",
+  "resource": "trident-web",
+  "public-client": true,
+  "confidential-port": 0
+}

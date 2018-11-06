@@ -1,0 +1,20 @@
+h3.ant-card-head-title {
+  line-height: 48px;
+}
+nz-card {
+  margin-bottom: 10px;
+}
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #49a9ee;
+  transition: all .3s;
+}
+.route .ant-form-item-label {
+  text-align: left;
+}
+.route [nz-col] {
+  height: 39px;
+}

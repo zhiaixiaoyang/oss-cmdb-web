@@ -1,0 +1,278 @@
+<header>
+  <div class="clearfix container">
+    <div id="header-nav">
+      <nav role="navigation">
+        <div class="logo-container has-link" routerLink="app-home">
+          <img [attr.src]="logoUrl" alt="" class="header-logo">
+          <!--<span>浪潮PaaS平台</span>-->
+        </div>
+        <div class="manger-text-container header-text has-link" routerLink="app-home">
+          <span>总览</span>
+        </div>
+       <!-- <nz-dropdown [nzTrigger]="'hover'" class="nav-aside" [(nzVisible)]="visible" (nzVisibleChange)="dropdownChange($event)">
+          <a class="header-text" nz-dropdown>
+            产品与服务<i class="anticon anticon-caret-down"></i>
+          </a>
+          <div nz-menu class="nav-aside-menu" id="dropdown-aside">
+            <nz-tabset nzTabPosition="left" [nzTabBarStyle]="tabBarStyle">
+              <nz-tab nzTitle="所有服务">
+                <div class="media">
+                  <div class="media-title">应用服务</div>
+                  <div class="media-content">
+                    <a class="media-link" routerLink="application" (click)="hideDropdown()">容器服务</a>
+                    <a class="media-link" routerLink="application-service" (click)="hideDropdown()">微服务</a>
+                    <a class="media-link" routerLink="app-image" (click)="hideDropdown()">容器镜像</a>
+                    <a class="media-link" routerLink="app-service-definition" (click)="hideDropdown()">应用模板</a>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-title">软件开发服务</div>
+                  <div class="media-content">
+                    <a class="media-link" routerLink="app-apply-build-management" (click)="hideDropdown()">构建</a>
+                    <a class="media-link" routerLink="app-apply-pipeline-management" (click)="hideDropdown()">流水线</a>
+                    <a class="media-link" routerLink="app-apply-code-check" (click)="hideDropdown()">代码检查</a>
+                    <a class="media-link" routerLink="app-binaries" (click)="hideDropdown()">程序包</a>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-title">数据库服务</div>
+                  <div class="media-content">
+                    <a class="media-link" routerLink="rds/mysql" (click)="hideDropdown()">云数据库 MySQL</a>
+                    <a class="media-link" routerLink="rds/redis" (click)="hideDropdown()">云数据库 Redis</a>
+                    <a class="media-link" routerLink="rds/mongodb" (click)="hideDropdown()">云数据库 MongoDB</a>
+                    <a class="media-link" routerLink="rds/tsdb" (click)="hideDropdown()">云数据库 TSDB</a>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-title">大数据服务</div>
+                  <div class="media-content">
+                    <a class="media-link" routerLink="emr" (click)="hideDropdown()">大数据 HDInsight</a>
+                    <a class="media-link" routerLink="mc" (click)="hideDropdown()">大数据 DSI</a>
+                    <a class="media-link" routerLink="ml" (click)="hideDropdown()">机器学习</a>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-title">物联网服务</div>
+                  <div class="media-content">
+                    <a class="media-link" routerLink="hub/endpoint" (click)="hideDropdown()">IoT Hub</a>
+                    <a class="media-link" routerLink="hub/device/detail/deviceInstance" (click)="hideDropdown()">设备管理</a>
+                    <a class="media-link" routerLink="tsdb" (click)="hideDropdown()">时序数据库</a>
+                    <a class="media-link" routerLink="stream/rules" (click)="hideDropdown()">流分析</a>
+                  </div>
+                </div>
+              </nz-tab>
+              <nz-tab nzTitle="应用服务">
+                <div class="media has-link" routerLink="application" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">容器服务</h4>
+                    <p class="media-desc">使用容器服务，浪潮云将为您快速搭建、运维和管理容器集群，帮您管理集群内容器的生命周期，
+                      在集群内能快速、弹性地部署您的服务；您可以轻松创建自定义配置集群，根据需要进行集群的扩缩。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="application-service" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">微服务</h4>
+                    <p class="media-desc">这里支持微服务全生命周期的管理功能，能够发现并管理应用部署产生的所有微服务，包含微服务的服务发现、服务治理、服务路由功能。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="app-image" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">容器镜像</h4>
+                    <p class="media-desc">镜像仓库服务提供安全可靠的Docker容器镜像管理功能，支撑容器化部署应用。
+                      在这里管理你的私有Docker镜像，这些镜像可以通过构建、流水线功能发布镜像到镜像仓库，也可以手动push到镜像仓库。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="app-service-definition" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">应用模板</h4>
+                    <p class="media-desc">服务目录用来管理平台提供的所有“HELM”模板。用户可以直接通过“HELM”模板创建Kubernetes资源。</p>
+                  </div>
+                </div>
+              </nz-tab>
+              <nz-tab nzTitle="软件开发服务">
+                <div class="media has-link" routerLink="app-apply-build-management" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">构建</h4>
+                    <p class="media-desc">构建管理描述了由源代码或程序包构建镜像所需的元数据，包括：源码库配置、语言和构建工具、
+                      触发器、软件包信息、构件信息、镜像信息等。用户可基于构建进行镜像的Build和研发PipeLine的定义。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="app-apply-pipeline-management" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">流水线</h4>
+                    <p class="media-desc">PipeLine 开发流水线，将软件开发过程的源代码、编译、构建、发布有机的沟通起来，
+                      形成一条统一的开发流水线，在流水线内自动完成由源代码/程序包到部署运维的各项工作。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="app-apply-code-check" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">代码检查</h4>
+                    <p class="media-desc"></p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="app-binaries" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">程序包</h4>
+                    <p class="media-desc"></p>
+                  </div>
+                </div>
+              </nz-tab>
+              <nz-tab nzTitle="数据库服务">
+                <div class="media has-link" routerLink="rds/mysql" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">云数据库 MySQL</h4>
+                    <p class="media-desc">Mysql是最流行的关系型数据库管理系统，在WEB应用方面MySQL是最好的RDBMS应用软件之一。
+                      支持弹性扩展、自动备份、自动容灾，保障数据的安全性。可以一键式创建部署不同架构的数据库集群，以满足测试和生产等多种业务场景的需求。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="rds/redis" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">云数据库 Redis</h4>
+                    <p class="media-desc">数据库服务-Redis可为用户提供分布式、高性能、高可用的Key-Value缓存服务，
+                      缓解对后端关系型数据库的访问压力，增强业务的并发处理性能。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="rds/mongodb" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">云数据库 MongoDB</h4>
+                    <p class="media-desc">数据库服务-MongoDB是一个基于MongoDB打造的高性能分布式文件存储的数据库系统。服务支持弹性扩展、
+                      自动备份、自动容灾，保障用户数据的安全性。可以一键式创建不同部署架构的数据库集群，以满足测试和生产等多种业务场景的使用需求。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="rds/tsdb" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">云数据库 TSDB</h4>
+                    <p class="media-desc">TSDB是用于管理时间序列数据库的专业数据库。区别于传统的关系型数据库，
+                      TSDB针对时间序列数据的存储、查询和展现进行了专门的优化，从而获得极高的数据压缩能力，极优的查询性能，特别适用于物联网的应用场景。。</p>
+                  </div>
+                </div>
+              </nz-tab>
+              <nz-tab nzTitle="大数据服务">
+                <div class="media has-link">
+                  <div class="media-body">
+                    <h4 class="media-heading" routerLink="emr" (click)="hideDropdown()">大数据 HDInsight</h4>
+                    <p class="media-desc">Inspur HDInsight 离线计算服务，提供HDFS数据存储，并可使用MAPRDUCE、HIVE、SPARK技术对数据进行离线的批处理计算。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="mc" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">大数据 DSI</h4>
+                    <p class="media-desc">数据科学探索(Data Science Insight，简称DSI)以Apache Spark为基础，基于内存计算，是一个快速、简单的分析平台。DSI服务剥离了对计算集群本身的关注，应用开发者可以专注于所要做的计算本身，
+                      定位于轻量级数据分析、探索服务，能够快速部署和销毁。</p>
+                  </div>
+                </div>
+                <div class="media has-link">
+                  <div class="media-body">
+                    <h4 class="media-heading" routerLink="ml" (click)="hideDropdown()">机器学习</h4>
+                    <p class="media-desc">机器学习（Machine Learning, 简称ML），使开发人员能够轻松构建智能应用程序，包括用于欺诈检测、需求预测、定向营销和点击预测的应用程序。
+                      Machine Learning 的强大算法可通过在您现有的数据中发现模式来创建机器学习模型。 然后，该服务会使用这些模型处理新数据并为应用程序生成预测结果。</p>
+                  </div>
+                </div>
+              </nz-tab>
+              <nz-tab nzTitle="物联网服务">
+                <div class="media has-link" routerLink="hub/endpoint" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">IoT Hub</h4>
+                    <p class="media-desc">IoT Hub可在连接了 Internet 的设备与云之间提供安全的双向通信。这样，便能从多台设备收集遥测数据，
+                      然后存储和分析数据。IoT Hub可以方便的管理证书、策略等。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="hub/device/detail/deviceInstance" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">设备管理</h4>
+                    <p class="media-desc">设备实例主要功能是可以创建设备。创建设备时，可以选择证书、设备模型。 创建完成后，可以通过编辑按钮更换证书，
+                      也可以进入物属性对物影子进行简单管理，还可以在物详情页面对设备的属性进行相应管理。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="tsdb" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">时序数据库</h4>
+                    <p class="media-desc">时序数据库（TSDB）是用于管理时间序列数据库的专业数据库。区别于传统的关系型数据库，
+                      TSDB针对时间序列数据的存储、查询和展现进行了专门的优化，从而获得极高的数据压缩能力，极优的查询性能，特别适用于物联网的应用场景。</p>
+                  </div>
+                </div>
+                <div class="media has-link" routerLink="stream/rules" (click)="hideDropdown()">
+                  <div class="media-body">
+                    <h4 class="media-heading">流分析</h4>
+                    <p class="media-desc">流分析为物联网解决方案提供实时分析功能，实现每秒对数百万事件的流式分析，灵活地转发和处理设备消息，
+                      通过类SQL语言设定规则，对消息进行筛选、变型和转发，实现数据的过滤、处理，并根据场景将数据无缝转发至不同的数据目的地。</p>
+                  </div>
+                </div>
+              </nz-tab>
+            </nz-tabset>
+          </div>
+        </nz-dropdown>-->
+        <div class="menu-container">
+          <ul nz-menu [nzMode]="'horizontal'">
+            <li nz-menu-item *ngFor="let item of sideLists" [routerLink]="item.link" [nzSelected]="item.selected">{{item.label}}</li>
+          </ul>
+        </div>
+        <nz-dropdown class="ss-container" [nzTrigger]="'click'" [(nzVisible)]="visibleHelp">
+          <!--span style="font-size: 16px;">支持与文档</span>-->
+          <a class="ant-dropdown-link" nz-dropdown>
+            <i class="anticon anticon-question-circle-o"></i>
+          </a>
+          <div nz-menu class="tool-help" [style.height.px]="helpHeight">
+            <div class="tool-head">
+              <h3 class="tool-head-title">帮助中心</h3>
+              <a class="tool-head-close" href="javascript:;" (click)="hideHelp()">
+                <i class="anticon anticon-close"></i>
+              </a>
+            </div>
+            <div class="tool-body">
+              <div class="doc-wrap">
+                <span class="top-title">您可能需要以下文档</span>
+                <div class="doc-list">
+                  <ul>
+                    <li><a routerLink="document/product" target="_blank">产品文档</a></li>
+                    <li><a routerLink="document/api" target="_blank">API 文档</a></li>
+                    <li><a routerLink="document/developer-resource" target="_blank">SDK 文档</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nz-dropdown>
+        <nz-dropdown [nzTrigger]="'hover'" class="name-area">
+          <a class="ant-dropdown-link" nz-dropdown>
+            <!--<img src="assets/images/head.png" class="head-png">-->
+            <!--<i class="fa fa-fw fa-user"></i>-->
+            <span class="global-uname">{{ userName }}</span><i class="anticon anticon-caret-down" style="font-size: 12px;"></i>
+          </a>
+          <nz-spin [nzSpinning]="isSpinning">
+            <ul nz-menu>
+              <li nz-menu-item>
+                <a [attr.href]="accountUrl" target="_blank">
+                  <i class="fa fa-user fa-fw"></i>用户设置
+                </a>
+              </li>
+              <li nz-menu-item>
+                <a [attr.href]="passwordUrl" target="_blank">
+                  <i class="fa fa-user fa-fw"></i>密码设置
+                </a>
+              </li>
+              <li nz-menu-item>
+                <a [attr.href]="logoutUrl">
+                  <i class="fa fa-user fa-fw"></i>退出
+                </a>
+              </li>
+            </ul>
+          </nz-spin>
+        </nz-dropdown>
+        <!--<div class="notice-container header-text">
+          <nz-badge [nzCount]="5" [nzStyle]="style">
+            <span class="notice-text header-text">消息</span>
+          </nz-badge>
+        </div>
+        <div class="search-bar-container">
+          <nz-input-group [nzSuffix]="suffixIcon">
+            <input nz-input placeholder="搜索">
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i class="anticon anticon-search" (click)="searchData($event)"></i>
+          </ng-template>
+        </div>-->
+      </nav>
+    </div>
+  </div>
+</header>

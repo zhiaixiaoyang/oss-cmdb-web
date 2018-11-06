@@ -1,0 +1,12 @@
+[
+  {"status":"device",
+    "display_status":"设备"
+
+  },
+   {"status":"gateway",
+    "display_status":"网关"
+
+  }
+
+
+]

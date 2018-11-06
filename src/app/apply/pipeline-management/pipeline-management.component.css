@@ -1,0 +1,337 @@
+.pipeline-table-td {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-width {
+  width: 220px;
+}
+
+.pipeline-name {
+  width: 130px;
+  font-size: 14px;
+  color: #0f0f0f;
+  font-weight: 600;
+  position: relative;
+  top: -3px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pipeline-count {
+  text-align: center;
+  z-index: 100;
+  width: 35px;
+  height: 15px;
+  background-color: #95bacf;
+  border-radius: 15px;
+  position: relative;
+  left: 0;
+  top: 16px;
+  color: white;
+  line-height: 15px;
+  font-size: 12px;
+}
+
+.pipeline-time-location {
+  border: solid 1px #e0dddd;
+  width: 82px;
+  height: 40px;
+  position: relative;
+  left: 36px;
+  top: -9px;
+  flex-direction: column;
+}
+
+.pipeline-time-one {
+  width: 80px;
+  text-align: center;
+  height: 19px;
+  line-height: 19px;
+  font-size: 10px;
+  background-color: #ece9e9;
+
+}
+
+.pipeline-time-two {
+  position: relative;
+  width: 80px;
+  height: 19px;
+  line-height: 19px;
+  text-align: center;
+  font-size: 10px;
+  background-color: #ffffff;
+}
+
+.pipeline-button {
+  display: flex;
+  width: 180px;
+  font-size: 14px;
+  justify-content: flex-end;
+}
+
+.pipeline-left-width {
+  height: 100%;
+  position: relative;
+}
+
+.pipeline-content {
+  position: relative;
+  width: 905px;
+  height: auto;
+}
+
+.pipeline-stage-odd {
+  position: relative;
+  top: 16px;
+  right: 110px;
+  width: 165px;
+  height: 70px;
+  float: right;
+}
+
+.pipeline-stage-odd-content {
+  width: 110px;
+  height: 60px;
+  float: right
+}
+
+.pipeline-check {
+  position: absolute;
+  top: 33px;
+  right: 35px;
+  z-index: 1;
+  color: #95bacf;
+  font-size: 20px;
+}
+
+.pipeline-check-operation {
+  position: absolute;
+  top: 36px;
+  right: 23px;
+  z-index: 1;
+}
+
+.pipeline-stage-odd-name {
+  text-align: center;
+  width: 110px;
+  position: relative;
+  height: 18px;
+  z-index: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pipeline-stage-odd-time {
+  width: 110px;
+  text-align: center;
+  color: #E0DDDD
+}
+
+.pipeline-stage-success {
+  margin-top: 5px;
+  height: 4px;
+  background-color: #3fb613;
+  width: 110px;
+  border-radius: 5px
+}
+
+.pipeline-stage-failed {
+  margin-top: 5px;
+  height: 4px;
+  background-color: #e0dddd;
+  width: 110px;
+  border-radius: 5px
+}
+
+.pipeline-stage-progress {
+  margin-top: 5px;
+  height: 4px;
+  position: relative;
+  z-index: 10;
+  background-color: #3fb613;
+  width: 110px;
+  border-radius: 5px
+}
+
+.pipeline-stage-failed-icon {
+  position: relative;
+  z-index: 100;
+  top: -10px;
+  left: 48px;
+  font-size: 15px;
+  color: #ff5c6d;
+  background-color: #FFFFFF;
+  border-radius: 50%
+}
+
+.pipeline-stage-hide-icon {
+  position: relative;
+  z-index: 100;
+  top: -10px;
+  left: 48px;
+  font-size: 15px;
+  color: #e0dddd;
+  background-color: #e0dddd;
+  border-radius: 50%
+}
+
+.pipeline-stage-success-icon {
+  position: relative;
+  z-index: 100;
+  top: -10px;
+  left: 48px;
+  font-size: 15px;
+  color: #3fb613;
+  background-color: #FFFFFF;
+  border-radius: 50%
+}
+
+.pipeline-stage-progress-icon {
+  position: relative;
+  z-index: 100;
+  top: -10px;
+  color: #FFFFFF;
+  left: 48px;
+  background-color: #3fb613;
+  font-size: 15px;
+  border-radius: 50%
+}
+
+.pipeline-stage-odd-arrow-left {
+  float: right;
+  width: 55px;
+  height: 35px;
+}
+
+.pipeline-stage-odd-left-content {
+  margin-left: 20px;
+  color: #E0DDDD;
+  font-size: 20px;
+  line-height: 55px;
+}
+
+.pipeline-stage-success-left-content {
+  margin-left: 20px;
+  color: #818685;
+  font-size: 20px;
+  line-height: 55px;
+}
+
+.pipeline-stage-odd-arrow-down {
+  position: relative;
+  top: 10px;
+  width: 110px;
+  height: 20px;
+  display: flex;
+  justify-content: space-around
+}
+
+.pipeline-stage-odd-arrow-down-content {
+  font-size: 20px;
+  color: #E0DDDD
+}
+
+.pipeline-stage-even {
+  position: relative;
+  width: 165px;
+  height: 70px;
+  left: 25px;
+  float: left;
+}
+
+.pipeline-stage-even-content {
+  position: relative;
+  width: 110px;
+  height: 60px;
+  float: left
+}
+
+.pipeline-stage-even-arrow-right {
+  float: left;
+  width: 55px;
+  height: 35px;
+}
+
+.pipeline-nil {
+  width: 88%;
+  float: left;
+  text-align: center;
+  color: #e0dddd
+}
+
+.pipeline-nil-failed-icon {
+  position: relative;
+  z-index: 100;
+  top: -10px;
+  font-size: 15px;
+  color: #E0DDDD;
+  background-color: #FFFFFF;
+  border-radius: 50%
+}
+
+.pipeline-nil-odd-left-content {
+  color: #E0DDDD;
+  font-size: 20px;
+  line-height: 55px;
+}
+
+.add-break {
+  height: 37px;
+}
+
+.button-location {
+  position: relative;
+  bottom: 5px;
+  text-align: center;
+}
+
+.pipeline-progress-stage {
+  position: relative;
+  z-index: 100;
+  top: -10px;
+  color: #FFFFFF;
+  background-color: #3fb613;
+  font-size: 15px;
+  border-radius: 50%
+}
+
+/*水平滚动垂直不滚动*/
+:host ::ng-deep .ant-table-body {
+  overflow-x: auto !important;
+  overflow-y: hidden;
+}
+
+/*有边界显示*/
+:host ::ng-deep .ant-table-bordered .ant-table-tbody > tr > td {
+  border-right: solid 1px #e0dddd;
+}
+
+:host ::ng-deep .ant-table tr:hover td:first-child {
+  background: white;
+}
+
+.thead-style > th {
+  background: none !important;
+}
+
+.border-right {
+  top: 41%;
+  -webkit-transform: translateX(-50%) rotate(45deg);
+  transform: translateX(-50%) rotate(45deg);
+  right: -14px;
+  background: white;
+  width: 10px;
+  height: 10px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: absolute;
+  display: block;
+  border-top: #e0dddd 1px;
+  border-bottom: transparent;
+  border-left: transparent;
+  border-right: #e0dddd 1px;
+  border-style: solid;
+}

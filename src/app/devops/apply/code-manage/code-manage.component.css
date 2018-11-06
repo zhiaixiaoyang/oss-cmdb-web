@@ -1,0 +1,32 @@
+.content-title {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #89aed1;
+  font-family:微软雅黑;
+}
+.content-subtitle {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: gray;
+  font-family:微软雅黑;
+}
+.img-container {
+  display: inline;
+  margin-left: 170px;
+  width: 40%;
+}
+.img-container-bottom {
+  width: 85%;
+  height: 120px;
+}
+.button {
+  width: 140px;
+  height: 35px;
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  background-color: #356da7;
+  border-radius:6px;
+}

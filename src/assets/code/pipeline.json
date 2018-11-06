@@ -1,0 +1,14 @@
+[{
+    "name": "IN_PROGRESS",
+    "display_name": "正在执行"
+  },
+  {
+    "name": "IN_MANPOWER",
+    "display_name": "人工处理"
+  },
+  {
+    "name": "ERROR",
+    "display_name": "错误"
+
+  }
+]

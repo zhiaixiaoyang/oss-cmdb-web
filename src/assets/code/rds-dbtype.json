@@ -1,0 +1,26 @@
+[
+  {
+    "name": "mongodb3",
+    "display_name": "MongoDB 3.6 单节点"
+  },
+  {
+    "name": "mongodb3-rs",
+    "display_name": "MongoDB 3.6 副本集"
+  },
+  {
+    "name": "redis4",
+    "display_name": "Redis 4.0.6 单节点"
+  },
+  {
+    "name": "redis4-ha",
+    "display_name": "Redis 4.0.6 高可用"
+  },
+  {
+    "name": "mysql57",
+    "display_name": "MySQL 5.7 单节点"
+  },
+  {
+    "name": "mysql57-ha",
+    "display_name": "MySQL 5.7 主备"
+  }
+]

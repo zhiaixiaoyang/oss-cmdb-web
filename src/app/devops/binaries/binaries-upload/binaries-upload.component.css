@@ -1,0 +1,22 @@
+.file-upload-span{
+  visibility: hidden;
+  position: absolute;
+  overflow: hidden;
+  width: 0;
+  height:0;
+  border:none;
+  margin:0;
+  padding:0
+}
+.file-upload-input{
+  width: 80%;
+  float:left
+}
+.file-upload-button{
+  float:right;
+  height: 30px;
+}
+.file-upload-select{
+  width: 80%;
+  float:left
+}

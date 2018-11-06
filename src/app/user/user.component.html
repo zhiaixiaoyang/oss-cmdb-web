@@ -1,0 +1,174 @@
+<h4 class="page-title">
+  <i class="icon-square-d"></i>
+  用户管理
+</h4>
+<div class="table-top clearfix">
+  <div class="pull-left">
+    <a class="btn btn-add" (click)="showModal(modalContent)">创建用户</a>
+    <ng-template #modalContent>
+      <nzi-form [formName]="validateForm" #NziFormComponent>
+
+        <form nz-form [formGroup]="validateForm">
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="name" [nzSm]="6" [nzXs]="24">登录账号</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+              <input formControlName="name" id="name" (ngModelChange)="changeCode($event)" nz-input>
+              <nz-form-explain *ngIf="getFormControl('name').dirty&&getFormControl('name').hasError('required')">请输入登录账号!</nz-form-explain>
+              <nz-form-explain *ngIf="getFormControl('name').dirty&&getFormControl('name').hasError('pattern')">请输入正确的登录账号（小写字母、数字组成，例：test001）</nz-form-explain>
+              <nz-form-explain *ngIf="getFormControl('name').dirty&&getFormControl('name').hasError('maxlength')">登录账号长度不能超过25</nz-form-explain>
+              <nz-form-explain *ngIf="getFormControl('name').dirty&&getFormControl('name').hasError('minlength')">登录账号长度不能小于4</nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="password" [nzSm]="6" [nzXs]="24">密码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+              <input formControlName="password" id="password"  nz-input type="password">
+              <nz-form-explain *ngIf="getInvalid('password')">
+              {{getInvalid("password").message}}
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="email" [nzSm]="6" [nzXs]="24">邮箱</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+              <input formControlName="email" id="email" [ngModel]="email" (keydown)="changeStatus()" nz-input>
+              <nz-form-explain *ngIf="getInvalid('email')">
+               {{getInvalid("email").message}}
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">是否启用</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" >
+              <nz-switch formControlName="enable" name="enable" [ngModel]="enable" >
+                <span checked>已启用</span>
+                <span unchecked>未启用</span>
+              </nz-switch>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="roles">角色</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+              <nz-select  formControlName="roles" [nzPlaceHolder]="'请选择角色'" [nzMode]="'multiple'" [(ngModel)]="selectedMultipleOption" [nzNotFoundContent]="'无法找到'">
+                <nz-option *ngFor="let data of roles" [nzLabel]="data" [nzValue]="data"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="validateForm.get('roles').dirty&&validateForm.get('roles').hasError('required')">
+                请选择角色
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+
+      </nzi-form>
+    </ng-template>
+  </div>
+  <div class="pull-right">
+    <input style="width: 150px;" placeholder="Basic usage" [(ngModel)]="name"  [nzSize]="'default'" nz-input placeholder="账号">
+    <input style="width: 150px;" [(ngModel)]="email" name="email" [nzSize]="'default'" nz-input placeholder="邮箱">
+    <button nz-button [nzType]="'primary'" [nzShape]="'circle'" (click)="search()">
+      <i class="anticon anticon-search"></i>
+    </button>
+  </div>
+</div>
+<nz-table #nzTable [nzData]="data" [nzLoading]="loading" nzBordered [nzPageSize]="10" (nzDataChange)="displayDataChange($event)" (nzPageIndexChange)="refreshStatus()" (nzPageSizeChange)="refreshStatus()">
+  <thead>
+  <tr>
+    <th >
+      <span>登录账号</span>
+    </th>
+
+    <th>
+      <span>邮箱</span>
+    </th>
+    <th>
+      <span>是否启用</span>
+    </th>
+    <th>
+      <span>角色</span>
+    </th>
+     <th>
+      <span>创建时间</span>
+    </th>
+    <th>
+      <span>操作</span>
+    </th>
+  </tr>
+  </thead>
+<tbody>
+<tr *ngFor="let data of nzTable.data">
+  <td>{{data.name}}</td>
+  <td>{{data.email}}</td>
+  <td>
+    <nz-switch [ngModel]="data.enable" (ngModelChange)="checkChange($event,data)" [nzSize]="'small'">
+      <span checked>已启用</span>
+      <span unchecked>未启用</span>
+    </nz-switch>
+  </td>
+  <td>{{data.role}}</td>
+  <td>{{data.createTime}}</td>
+  <td>
+
+    <nz-tooltip [nzTitle]="'分配命名空间'" [nzPlacement]="'top'">
+      <a nz-tooltip (click)="showUserNamespaces(data.id, allocateContent)" class="btn-opt">
+        <i class="fa fa-fw fa-edit"></i>
+      </a>
+    </nz-tooltip>
+    <ng-template #allocateContent>
+      <nz-transfer
+        [nzDataSource]="namespaceList"
+        nzShowSearch
+        [nzTitles]="['未分配', '已分配']"
+        [nzOperations]="['分配', '收回']"
+        [nzFilterOption]="filterOption"
+        (nzChange)="changeNamespace($event)">
+      </nz-transfer>
+    </ng-template>
+
+
+    <nz-tooltip [nzTitle]="'重置密码'" [nzPlacement]="'top'">
+      <a nz-tooltip (click)="showedit(data.id, data.name, data.namespace, data.desc, editContent)" class="btn-opt">
+        <i class="fa fa-fw fa-lock"></i>
+      </a>
+    </nz-tooltip>
+    <ng-template #editContent>
+      <nzi-form [formName]="validateForm1" #NziFormComponent>
+
+        <form nz-form [formGroup]="validateForm1">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">用户：</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback>
+            {{data.name}}
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">密码：</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback>
+              <input [nzSize]="'large'" formControlName="password" id="password"  nz-input type="password">
+              <nz-form-explain *ngIf="getInvalid('password')">
+              {{getInvalid("password").message}}
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">确认密码：</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24" nzHasFeedback>
+              <input [nzSize]="'large'" formControlName="confirm_password" id="confirm_password"  nz-input type="password">
+              <nz-form-explain *ngIf="getInvalid('confirm_password')">
+              {{getInvalid("confirm_password").message}}
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </nzi-form>
+    </ng-template>
+
+
+    <nz-tooltip [nzTitle]="'删除'" [nzPlacement]="'top'">
+      <a nz-tooltip (click)="showConfirm(data.id,data.name)" class="btn-opt">
+        <i class="fa fa-fw fa-trash"></i>
+      </a>
+    </nz-tooltip>
+  </td>
+</tr>
+</tbody>
+</nz-table>

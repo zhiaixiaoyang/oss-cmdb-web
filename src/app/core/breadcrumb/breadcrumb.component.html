@@ -1,0 +1,11 @@
+<nz-breadcrumb *ngIf="hasBreadcrumb">
+  <nz-breadcrumb-item>
+    <a routerLink="app-home">
+      <i class="anticon anticon-home"></i>
+    </a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs; let i=index">
+    <span *ngIf="i==breadcrumbs.length-1">{{breadcrumb.label}}</span>
+    <a *ngIf="i!=breadcrumbs.length-1" [routerLink]="[breadcrumb.url, breadcrumb.params]">{{breadcrumb.label}}</a>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>

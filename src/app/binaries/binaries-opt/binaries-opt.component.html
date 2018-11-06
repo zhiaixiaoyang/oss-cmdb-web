@@ -1,0 +1,59 @@
+<ng-template [ngIf]="binariesData">
+
+  <nz-tooltip [nzTitle]="'更新'" [nzPlacement]="'top'">
+    <a nz-tooltip class="btn-opt" (click)="showUpdateModal(updatebinaries)">
+      <i class="fa fa-fw fa-upload"></i>
+    </a>
+  </nz-tooltip>
+  <ng-template #updatebinaries>
+    <form nz-form [formGroup]="updateValidateForm">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="runtimEnv" [nzSm]="4" [nzXs]="24">版本</nz-form-label>
+        <nz-form-control [nzSm]="18" [nzXs]="24" >
+          <nz-select formControlName="versionId" [(ngModel)]="versionId"  nzShowSearch nzAllowClear>
+            <nz-option *ngFor="let option of versions" [nzLabel]="option.version" [nzValue]="option.id"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="getUpdateInvalidMessage('versionId')">
+            {{getUpdateInvalidMessage('versionId').message}}
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired [nzSm]="4" [nzXs]="24">文件</nz-form-label>
+        <nz-form-control [nzSm]="18" [nzXs]="24">
+          <input class="file-upload-input" formControlName="fileName" [(ngModel)]="fileName" placeholder="请选择程序包文件" disabled nz-input>
+          <button class="file-upload-button" [nzType]="'primary'" (click)="fileInput.click()"  nz-button>选择</button>
+          <span class="file-upload-span">
+          <input type="file" #fileInput ng2FileSelect [uploader]="uploader">
+        </span>
+          <nz-form-explain *ngIf="getUpdateInvalidMessage('fileName')">
+            {{getUpdateInvalidMessage('fileName').message}}
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <nz-tooltip [nzTitle]="'删除'" [nzPlacement]="'top'">
+    <a nz-tooltip class="btn-opt" (click)="delBinariesConfirm()">
+      <i class="fa fa-fw fa-trash"></i>
+    </a>
+  </nz-tooltip>
+</ng-template>
+
+
+<ng-template [ngIf]="binariesVersionData">
+
+  <nz-tooltip [nzTitle]="'下载'" [nzPlacement]="'top'">
+    <a nz-tooltip class="btn-opt" [href]="downloadUrl" download="sssss">
+      <i class="fa fa-fw fa-download"></i>
+    </a>
+  </nz-tooltip>
+
+  <nz-tooltip [nzTitle]="'删除'" [nzPlacement]="'top'">
+    <a nz-tooltip class="btn-opt" (click)="delBinariesVersionConfirm()">
+      <i class="fa fa-fw fa-trash"></i>
+    </a>
+  </nz-tooltip>
+</ng-template>

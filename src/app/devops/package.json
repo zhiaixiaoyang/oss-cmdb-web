@@ -1,0 +1,7 @@
+{
+  "name": "@sws/devops",
+  "version": "1.0.0-SNAPSHOT.5",
+  "description": "software service devops",
+  "main": "index.ts",
+  "author": "inspur"
+}

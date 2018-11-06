@@ -1,0 +1,69 @@
+<div class="page-title">
+  <nzi-breadcrumb [detailName]="data.name"></nzi-breadcrumb>
+  <div class="page-title-opt pull-right">
+    <button *ngIf="data.warrant=== true" routerLink="add/{{data.Id}}/detail" nz-button>编辑</button>
+    <button *ngIf="data.warrant=== false" disabled nz-button>
+      编辑
+    </button>
+    <button nz-button (click)="renovate()"><i class="anticon anticon-reload"></i></button>
+  </div>
+</div>
+<nz-spin [nzSpinning]="loading">
+  <div class="page-body">
+    <div class="form-fieldset form-horizontal form-align-left">
+      <fieldset>
+        <legend>
+          <i class="icon-square"></i>基本信息
+        </legend>
+        <div class="form-static">
+          <div class="form-group">
+            <label class="control-label col-em-6">任务名称：</label>
+            <div class="col-em-offset-6">
+              <p class="form-control-static">{{data.name}}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-em-6">构建时间：</label>
+            <div class="col-em-offset-6">
+              <p class="form-control-static">{{data.createTime | date : "y-MM-dd HH:mm:ss" || '--'}}</p>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="form-fieldset form-horizontal form-align-left">
+      <fieldset>
+        <legend>
+          <i class="icon-square"></i>关联信息
+        </legend>
+        <div class="form-static">
+          <div class="form-group">
+            <label class="control-label col-em-6">源码路径：</label>
+            <div class="col-em-offset-6">
+              <p class="form-control-static">{{data.sonarSources}}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-em-6">sonar地址：</label>
+            <div class="col-em-offset-6">
+              <p class="form-control-static">{{data.sonarResult || '无'}}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-em-6">关联构建：</label>
+            <div class="col-em-offset-6">
+              <p class="form-control-static">{{data.constructName || '无'}}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-em-6">关联流水线：</label>
+            <div class="col-em-offset-6">
+              <p class="form-control-static">{{data.pipelineName || '无'}}</p>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</nz-spin>
+

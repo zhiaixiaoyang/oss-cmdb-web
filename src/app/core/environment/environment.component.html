@@ -1,0 +1,37 @@
+<ng-container *ngIf="count<=5 && type=='form' && returnList !== true">
+  <nz-radio-group [(ngModel)]="environment" (ngModelChange)="getEnvironment($event)">
+    <ng-container *ngFor="let item of environments">
+      <label nz-radio-button [nzValue]="item.id">{{item.displayName}}</label>
+    </ng-container>
+  </nz-radio-group>
+</ng-container>
+<ng-container *ngIf="count<=5 && type=='form' && returnList === true">
+  <nz-radio-group [(ngModel)]="environment" (ngModelChange)="getEnvironment($event)">
+    <ng-container *ngFor="let item of environments">
+      <label nz-radio-button [nzValue]="item">{{item.displayName}}</label>
+    </ng-container>
+  </nz-radio-group>
+</ng-container>
+<ng-container *ngIf="(count>5 || type=='table') && returnList !== true">
+  <nz-select nz-tooltip [nzTitle]="environmentName"  id="environmentId" nz-col [nzSize]="nzSize" [nzSm]="Sm" [nzXs]="Xs"
+             [(ngModel)]="environment" (ngModelChange)="getEnvironment()"
+             [nzPlaceHolder]="nzPlaceHolder" nzShowSearch>
+      <nz-option
+        *ngFor="let item of environments"
+        [nzLabel]="'集群: '+item.displayName"
+        [nzValue]="item.id">
+      </nz-option>
+  </nz-select>
+</ng-container>
+<ng-container *ngIf="(count>5 || type=='table') && returnList === true">
+  <nz-select nz-tooltip [nzTitle]="environmentName" id="environmentId2" nz-col [nzSize]="nzSize" [nzSm]="Sm" [nzXs]="Xs"
+             [(ngModel)]="environment" (ngModelChange)="getEnvironment()"
+             [nzPlaceHolder]="nzPlaceHolder" nzShowSearch>
+    <nz-option
+      *ngFor="let item of environments"
+      [nzLabel]="'集群: '+item.displayName"
+      [nzValue]="item">
+    </nz-option>
+  </nz-select>
+</ng-container>
+

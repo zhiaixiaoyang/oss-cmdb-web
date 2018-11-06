@@ -1,0 +1,14 @@
+[
+  {
+  "name":"app",
+  "display_name":"应用角色"
+  },
+  {
+    "name":"source",
+    "display_name":"数据源角色"
+  },
+  {
+    "name":"manager",
+    "display_name":"管理角色"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "status": "SUCCESS",
+    "label": "成功",
+    "color": "green"
+  },
+  {
+    "status": "FAILED",
+    "label": "失败",
+    "color": "red"
+  },
+  {
+    "status": "NOT_EXECUTED",
+    "label": "不执行",
+    "color": "red"
+  },
+  {
+    "status": "IN_PROGRESS",
+    "label": "进行中",
+    "color": "blue"
+  },
+  {
+    "status": "NIL",
+    "label": "未执行",
+    "color": "yellow"
+  },
+  {
+    "status": "PAUSED_PENDING_INPUT",
+    "label": "处理中",
+    "color": "blue"
+  },
+  {
+    "status": "ABORTED",
+    "label": "中止",
+    "color": "red"
+  },
+  {
+    "status": "LOADING",
+    "label": "加载中",
+    "color": "blue"
+  }
+]

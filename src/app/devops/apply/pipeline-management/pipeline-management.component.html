@@ -1,0 +1,350 @@
+<div class="page-title">
+  <h4>流水线</h4>
+  <a class="pull-right help-link">
+    <i class="anticon anticon-question-circle-o"></i>流水线使用指南
+  </a>
+</div>
+<div class="page-header">
+  PipeLine 开发流水线，将软件开发过程的源代码、编译、构建、发布有机的沟通起来，形成一条统一的开发流水线，在流水线内自动完成由源代码/程序包到部署运维的各项工作。
+</div>
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+    <button routerLink="add" nz-button nzType="primary" class="btn-add"><i class="fas fa-plus"></i> 创建流水线</button>
+  </div>
+  <div class="pull-right">
+    <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+      <input (keyup.enter)="search()" [(ngModel)]="searchPipelineName" nz-input placeholder="请输入流水线名称">
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzSearch (click)="search()">
+        <i class="anticon anticon-search"></i>
+      </button>
+    </ng-template>
+    <button nz-button (click)="renovate()" class="table-top-opt"><i class="anticon anticon-reload"></i></button>
+  </div>
+</div>
+<nz-table nzShowSizeChanger [nzPageSizeOptions]=[5,10,15,20,25] [nzNoResult]="noResult" [nzScroll]="{ x: '1001px' }" [(nzPageIndex)]="pipelinePageIndex" [nzPageSize]="5"
+          #nzTable [nzBordered]="true" [(nzData)]="data"
+          [nzLoading]="loading"
+          [nzSize]="'default'" [nzWidthConfig]="['135px','900px']">
+  <tbody>
+  <tr *ngFor="let data of nzTable.data; let m =index">
+    <td>
+      <div class="pipeline-left-width">
+        <div class="pipeline-name">{{data.pipelineName}}</div>
+        <div class="pipeline-count" *ngIf="data.name!== '0'">{{data.name}}</div>
+        <div class="pipeline-count" *ngIf="data.name == '0'">#{{data.name}}</div>
+        <div class="pipeline-time-location">
+          <div class="pipeline-time-one">{{data.startTimeMillis}}</div>
+          <div class="pipeline-time-two">{{data.startTimeMillis2}}</div>
+        </div>
+        <div class="border-right"></div>
+      </div>
+    </td>
+    <td>
+      <div class="pipeline-table-td">
+        <div class="pipeline-button">
+          <nz-tooltip [nzTitle]="'手动执行'">
+            <a nz-tooltip
+               *ngIf="handOrNot[m] !== 1&&data.status !== 'IN_PROGRESS'&&data.status != 'PAUSED_PENDING_INPUT'"
+               (click)="handPipeline(m,data.pipelineId)" class="btn-opt">
+              <i class="fa fa-fw fa-hand-point-up"></i>
+            </a>
+          </nz-tooltip>
+          <nz-tooltip [nzTitle]="'停止执行'">
+            <a nz-tooltip
+               *ngIf="handOrNot[m] == 1||data.status === 'IN_PROGRESS'||data.status == 'PAUSED_PENDING_INPUT'"
+               (click)="stopPipeline(m,data.pipelineId)" class="btn-opt">
+              <i class="fa fa-fw fa-stop"></i>
+            </a>
+          </nz-tooltip>
+          <nz-tooltip [nzTitle]="'执行历史'">
+            <a *ngIf="data.status !== 'NIL'" nz-tooltip routerLink="history/{{data.pipelineId}}" class="btn-opt">
+              <i class="fa fa-fw fa-history"></i>
+            </a>
+            <a *ngIf="data.status === 'NIL'" nz-tooltip (click)="noHistory()" class="btn-opt">
+              <i class="fa fa-fw fa-history"></i>
+            </a>
+          </nz-tooltip>
+          <nz-tooltip [nzTitle]="'查看执行log'">
+            <a *ngIf="data.status !== 'NIL'" nz-tooltip routerLink="log/{{data.pipelineId}}/{{data.buildName}}/home"
+               class="btn-opt">
+              <i class="fa fa-fw fa-book"></i>
+            </a>
+            <a *ngIf="data.status === 'NIL'" nz-tooltip (click)="noLog()" class="btn-opt">
+              <i class="fa fa-fw fa-book"></i>
+            </a>
+          </nz-tooltip>
+          <nz-tooltip [nzTitle]="'编辑流水线'">
+            <a nz-tooltip *ngIf="data.warrant === true" routerLink="add/{{data.pipelineId}}" class="btn-opt">
+              <i class="fa fa-fw fa-pencil"></i>
+            </a>
+            <a nz-tooltip disabled="true" *ngIf="data.warrant === false" class="btn-opt">
+              <i class="fa fa-fw fa-pencil"></i>
+            </a>
+          </nz-tooltip>
+          <nz-tooltip [nzTitle]="'删除'">
+            <a nz-tooltip *ngIf="data.warrant === true" (click)="deletePipeline(data.pipelineId,m, data.pipelineName)"
+               class="btn-opt">
+              <i class="fa fa-fw fa-trash"></i>
+            </a>
+            <a nz-tooltip *ngIf="data.warrant === false" disabled="true" class="btn-opt">
+              <i class="fa fa-fw fa-trash"></i>
+            </a>
+          </nz-tooltip>
+        </div>
+      </div>
+      <div class="pipeline-content">
+        <div nz-col *ngFor="let item of data.stages;let n = index">
+          <div *ngFor="let option of item;let i=index">
+            <div *ngIf="n%2==1" class="pipeline-stage-odd" (mouseenter)="showIcon(i,n,m)"
+                 (mouseleave)="hideIcon(i,n)">
+              <div class="pipeline-stage-odd-content">
+                <div *ngIf="option.status=='PAUSED_PENDING_INPUT'">
+                  <div class="pipeline-check">
+                    <button *ngIf="option.type === 'ManualOperation'" nz-button
+                            (click)="stageCheck(mergeEvent,data.pipelineId,data.buildName)" nzType="primary"
+                            nzSize="small">
+                      审查
+                    </button>
+                  </div>
+                  <div *ngIf="option.type === 'Test'" class="pipeline-check-operation">
+                    <button nz-button (click)="stageTest(mergeEvent,data.pipelineId,data.buildName)" nzType="primary"
+                            nzSize="small">
+                      人工测试
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="option.status=='SUCCESS'">
+                  <div class="pipeline-check-operation">
+                    <a *ngIf="option.type === 'CodeCheck' && option.sonarResult" href="{{option.sonarResult}}"
+                       target="_blank">
+                      <button nz-button nzType="primary"
+                              nzSize="small">
+                        审查结果
+                      </button>
+                    </a>
+                  </div>
+                </div>
+                <div class="pipeline-stage-odd-name">{{option.name}}</div>
+                <div *ngIf="option.status=='SUCCESS'" class="pipeline-stage-success"></div>
+                <div *ngIf="option.status=='FAILED'" class="pipeline-stage-failed"></div>
+                <div *ngIf="option.status=='IN_PROGRESS'" class="pipeline-stage-progress"></div>
+                <div *ngIf="option.status=='PAUSED_PENDING_INPUT'" class="pipeline-stage-progress"></div>
+                <div *ngIf="option.status=='Unbuild'" class="pipeline-stage-failed"></div>
+                <i *ngIf="option.status=='FAILED'"
+                   class="anticon anticon-close-circle pipeline-stage-failed-icon"></i>
+                <i *ngIf="option.status=='SUCCESS'"
+                   class="anticon anticon-check-circle pipeline-stage-success-icon"></i>
+                <i *ngIf="option.status=='IN_PROGRESS'"
+                   class="anticon anticon-loading anticon-spin pipeline-stage-progress-icon"></i>
+                <i *ngIf="option.status=='Unbuild'"
+                   class="anticon anticon-close-circle pipeline-stage-hide-icon"></i>
+                <i *ngIf="option.status=='PAUSED_PENDING_INPUT'"
+                   class="anticon anticon-loading anticon-spin pipeline-stage-progress-icon"></i>
+                <div *ngIf="option.status!='IN_PROGRESS'&&option.status!='Unbuild'" class="pipeline-stage-odd-time">
+                  {{option.durationMillis}}
+                </div>
+              </div>
+              <!--左箭头-->
+              <div *ngIf="i!=4 &&i!=item.length-1 &&option.arrow===false" class="pipeline-stage-odd-arrow-left">
+                <i class="anticon anticon-arrow-left pipeline-stage-odd-left-content"></i>
+              </div>
+              <div *ngIf="i!=4 &&i!=item.length-1&&option.arrow===true" class="pipeline-stage-odd-arrow-left">
+                <i class="anticon anticon-arrow-left pipeline-stage-success-left-content"></i>
+              </div>
+              <!--下箭头-->
+              <div *ngIf="i==4&&data.stages[n+1]" class="pipeline-stage-odd-arrow-down">
+                <i class="anticon anticon-arrow-down pipeline-stage-odd-arrow-down-content"></i>
+              </div>
+            </div>
+            <div *ngIf="n%2==0" class="pipeline-stage-even" (mouseenter)="showIcon(i,n,m)"
+                 (mouseleave)="hideIcon(i,n)">
+              <div class="pipeline-stage-even-content">
+                <div *ngIf="option.status=='PAUSED_PENDING_INPUT'">
+                  <div class="pipeline-check">
+                    <button nz-button *ngIf="option.type === 'ManualOperation'"
+                            (click)="stageCheck(mergeEvent,data.pipelineId,data.buildName)" nzType="primary"
+                            nzSize="small">
+                      审查
+                    </button>
+                  </div>
+                  <div *ngIf="option.type === 'Test'" class="pipeline-check-operation">
+                    <button nz-button (click)="stageTest(mergeEvent,data.pipelineId,data.buildName)" nzType="primary"
+                            nzSize="small">
+                      人工测试
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="option.status=='SUCCESS'">
+                  <div class="pipeline-check-operation">
+                    <a *ngIf="option.type === 'CodeCheck' && option.sonarResult" href="{{option.sonarResult}}"
+                       target="_blank">
+                      <button nz-button nzType="primary"
+                              nzSize="small">
+                        审查结果
+                      </button>
+                    </a>
+                  </div>
+                </div>
+                <div class="pipeline-stage-odd-name ">{{option.name}}</div>
+                <div *ngIf="option.status=='SUCCESS'" class="pipeline-stage-success"></div>
+                <div *ngIf="option.status=='FAILED'" class="pipeline-stage-failed"></div>
+                <div *ngIf="option.status=='IN_PROGRESS'" class="pipeline-stage-progress"></div>
+                <div *ngIf="option.status=='PAUSED_PENDING_INPUT'" class="pipeline-stage-progress"></div>
+                <div *ngIf="option.status=='Unbuild'" class="pipeline-stage-failed"></div>
+                <i *ngIf="option.status=='FAILED'"
+                   class="anticon anticon-close-circle pipeline-stage-failed-icon"></i>
+                <i *ngIf="option.status=='Unbuild'"
+                   class="anticon anticon-close-circle pipeline-stage-hide-icon"></i>
+                <i *ngIf="option.status=='SUCCESS'"
+                   class="anticon anticon-check-circle pipeline-stage-success-icon"></i>
+                <i *ngIf="option.status=='IN_PROGRESS'"
+                   class="anticon anticon-loading anticon-spin pipeline-stage-progress-icon"></i>
+                <i *ngIf="option.status=='PAUSED_PENDING_INPUT'"
+                   class="anticon anticon-loading anticon-spin pipeline-stage-progress-icon"></i>
+                <div *ngIf="option.status!='IN_PROGRESS'&&option.status!='Unbuild'" class="pipeline-stage-odd-time">
+                  {{option.durationMillis}}
+                </div>
+              </div>
+              <!--右箭头-->
+              <div *ngIf="i!=4 &&i!=item.length-1 &&option.arrow===false" class="pipeline-stage-even-arrow-right">
+                <i class="anticon anticon-arrow-right pipeline-stage-odd-left-content"></i>
+              </div>
+              <div *ngIf="i!=4 &&i!=item.length-1&&option.arrow===true" class="pipeline-stage-even-arrow-right">
+                <i class="anticon anticon-arrow-right pipeline-stage-success-left-content"></i>
+              </div>
+              <!--下箭头-->
+              <div *ngIf="i==4&&data.stages[n+1]" class="pipeline-stage-odd-arrow-down">
+                <i class="anticon anticon-arrow-down pipeline-stage-odd-arrow-down-content"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<!--admin select environment to install jenkins-->
+<nzi-form [formName]="validateFormEnvironment" #FormEnvironmentComponent>
+  <ng-template #environmentInfo>
+    <form nz-form [formGroup]="validateFormEnvironment">
+      <nz-form-item>
+        <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">集群</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <app-environment formControlName="environment" [nzPlaceHolder]="'选择集群'" (change)="getEnvironment($event)"
+                           [firstName]="true" [type]="'table'"></app-environment>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">存储类型</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-select [nzPlaceHolder]="'选择存储类型'" formControlName="storageClass"
+                     [(ngModel)]="storageClass">
+            <nz-option *ngFor="let option of storageClassData" [nzLabel]="option.key"
+                       [nzValue]="option.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+</nzi-form>
+<ng-template #mergeEvent>
+  <nz-tabset class="tab-top-border">
+    <nz-tab nzTitle="MergeRequest">
+      <nz-table [nzHideOnSinglePage]="true" [nzPageSize]="4" #smallTable
+                nzSize="small" [nzData]="mergeInformation" [nzLoading]="mergeLoading"
+                nzBordered>
+        <thead>
+        <tr>
+          <th nzShowExpand nzWidth="20px"></th>
+          <th nzWidth="150px">
+            <span>名称</span>
+          </th>
+          <th nzWidth="250px">
+            <span>描述</span>
+          </th>
+          <th nzWidth="100px">
+            <span>时间</span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-template ngFor let-data [ngForOf]="smallTable.data">
+          <tr>
+            <td nz-tooltip nzTitle="commit 信息" nzShowExpand [(nzExpand)]="data.expand"></td>
+            <td>
+              <a href="{{data.url}}" target="_blank">
+                {{data.title || '--'}}
+              </a>
+            </td>
+            <td>
+              {{data.description || '--'}}
+            </td>
+            <td>
+              {{data.updated_at | date : "y-MM-dd HH:mm:ss" || '--'}}
+            </td>
+          </tr>
+          <tr [nzExpand]="data.expand">
+            <td colspan="4">
+              <nz-table #innerTable [nzData]="data.commits" nzSize="small" [nzPageSize]="2" [nzHideOnSinglePage]="true">
+        <thead>
+        <tr class="thead-style">
+          <th nzWidth="150px">名称</th>
+          <th nzWidth="250px">描述</th>
+          <th nzWidth="60px">操作人</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of innerTable.data">
+          <td>{{data.title || '--'}}</td>
+          <td>{{data.message || '--'}}</td>
+          <td>{{data.committer_name || '--'}}</td>
+        </tr>
+        </tbody>
+      </nz-table>
+      </td>
+      </tr>
+</ng-template>
+</tbody>
+</nz-table>
+</nz-tab>
+<nz-tab nzTitle="Push">
+  <nz-table [nzHideOnSinglePage]="true" [nzPageSize]="4" #smallTable2
+            nzSize="small" [nzData]="pushInformation"
+            nzBordered>
+    <thead>
+    <tr>
+      <th>
+        <span>名称</span>
+      </th>
+      <th>
+        <span>描述</span>
+      </th>
+      <th nzWidth="80px">
+        <span>时间</span>
+      </th>
+      <th nzWidth="60px">
+        <span>操作人</span>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of smallTable2.data">
+      <td>
+        {{data.title || '--'}}
+      </td>
+      <td>{{data.message || '--'}}</td>
+      <td>{{data.created_at | date : "y-MM-dd HH:mm:ss" || '--'}}</td>
+      <td>
+        {{data.committer_name}}
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</nz-tab>
+</nz-tabset>
+</ng-template>
+

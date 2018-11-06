@@ -1,0 +1,41 @@
+{
+  "auth": {
+    "url": "https://trident.iop77.com/auth",
+    "realm": "trident",
+    "clientId": "client-admin",
+    "redirectUri":"https://trident.iop77.com"
+  },
+  "monitoring": {
+    "domin": "/monitoring",
+    "url": "http://10.110.22.77:30010",
+    "isRelative": true
+  },
+  "logo": {
+    "url": "assets/images/logo.png"
+  },
+  "provisioner":["kubernetes.io/rbd","incloud/disk"],
+  "kubernetes.io/rbd": {
+    "parameters": [
+      "adminSecretNamespace",
+      "adminSecretName",
+      "adminId",
+      "imageFormat",
+      "monitors",
+      "pool",
+      "userId",
+      "userSecretName"
+    ],
+    "other":["userSecretKey"],
+    "sp":[
+      "reclaimPolicy"
+    ]
+  },
+  "incloud/disk": {
+    "parameters": [
+      "type"
+    ],
+    "sp":[
+      "reclaimPolicy"
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+<div class="page-header">
+  集群服务端口号管理，可以对集群端口号进行查询、锁定、解锁，通过对端口号的管理实现Internet网络访问集群服务的功能。
+</div>
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+  </div>
+  <div class="pull-right">
+    <app-environment [nzPlaceHolder]="'选择集群'" [(ngModel)]="environment" (ngModelChange)="changeEnvironment()"
+                     [firstName]="true" [width]="220" [type]="'table'"></app-environment>
+    <nz-select class="search-type"  [(ngModel)]="status" nzPlaceHolder="选择状态" (ngModelChange)="search()" nzAllowClear nzShowSearch>
+      <nz-option [nzValue]="'UNALLOCATED'" [nzLabel]="'未分配'"></nz-option>
+      <nz-option [nzValue]="'ALLOCATED'" [nzLabel]="'已分配'"></nz-option>
+      <nz-option [nzValue]="'LOCKED'" [nzLabel]="'锁定'"></nz-option>
+    </nz-select>
+    <nz-input-group style="width: 220px;" nzSearch [nzSuffix]="suffixIconButton">
+      <input [(ngModel)]="name" (keyup.enter)="search()" name="name" nz-input placeholder="端口号">
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzSearch (click)="search()">
+        <i class="anticon anticon-search"></i>
+      </button>
+    </ng-template>
+    <button nz-button nzType="primary" (click)="reloadDatas()">
+      <i class="anticon anticon-reload"></i>
+    </button>
+  </div>
+</div>
+<nz-table #nzTable [nzData]="data" [nzLoading]="loading" nzBordered [nzPageSize]="10">
+    <thead>
+    <tr>
+      <th>
+        <span>端口号</span>
+      </th>
+      <th>
+        <span>服务名称</span>
+      </th>
+      <th>
+        <span>命名空间</span>
+      </th>
+      <th>
+        <span>服务端口</span>
+      </th>
+      <th>
+        <span>状态</span>
+      </th>
+      <th>
+        <span>用户</span>
+      </th>
+      <th>
+        <span>eip</span>
+      </th>
+      <th [width]="50" *ngIf="isAdmin && null !== environment && '' !==environment">
+        <span>操作</span>
+      </th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+      <td>
+        {{data?.port}}
+      </td>
+      <td>
+        {{data?.servicename}}
+      </td>
+      <td>
+        {{data?.servicenamespace}}
+      </td>
+      <td>
+        {{data?.targetport}}
+      </td>
+      <td>
+        {{data?.statusname}}
+      </td>
+      <td>
+        {{data?.user}}
+      </td>
+      <td>
+        {{data?.eip}}
+      </td>
+      <td *ngIf="isAdmin && null !== environment && '' !==environment">
+        <ng-container *ngIf=" 'UNALLOCATED' === data?.status">
+          <nz-tooltip [nzTitle]="'锁定'" [nzPlacement]="'top'">
+            <a  (click)="updateExternalService('LOCKED',data , '锁定')" nz-tooltip class="btn-opt">
+              <i class="fa fa-fw fa-lock"></i>
+            </a>
+          </nz-tooltip>
+        </ng-container>
+        <ng-container *ngIf=" 'LOCKED' === data?.status">
+          <nz-tooltip [nzTitle]="'解锁'" [nzPlacement]="'top'">
+            <a  (click)="updateExternalService('UNALLOCATED',data , '解锁')" nz-tooltip class="btn-opt">
+              <i class="fa fa-fw fa-unlock"></i>
+            </a>
+          </nz-tooltip>
+        </ng-container>
+      </td>
+    </tr>
+    </tbody>
+</nz-table>

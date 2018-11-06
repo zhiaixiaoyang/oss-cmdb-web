@@ -1,0 +1,92 @@
+<div class="page-title">
+  <h4>代码审查规则</h4>
+  <a class="pull-right help-link">
+    <i class="anticon anticon-question-circle-o"></i>代码审查规则使用指南
+  </a>
+</div>
+<div class="page-header">
+  代码审查能够在代码构建过程中帮助开发人员用来检查编译器无法发现的更复杂一点的错误，最大可能避免（可能出现的）运行错误。通过设置规则检测软件缺陷和安全隐患。
+</div>
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+    <a class="btn btn-add" routerLink="add">创建规则</a>
+  </div>
+</div>
+<nz-table nzShowSizeChanger [nzPageSize]="10" #nzTable [nzData]="data" [nzLoading]="loading" nzBordered>
+  <thead>
+  <tr>
+    <th>
+      <span>构建名称</span>
+    </th>
+    <th>
+      <span>构建类型</span>
+    </th>
+    <th [nzWidth]="'300px'">
+      <span>项目地址/程序包名称</span>
+    </th>
+    <th>
+      <span>分支/版本</span>
+    </th>
+    <th>
+      <span>触发条件</span>
+    </th>
+    <th>
+      <span>构建状态</span>
+    </th>
+    <th>
+      <span>构建时间</span>
+    </th>
+    <th>
+      <span>操作</span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of nzTable.data">
+    <td>
+      <a routerLink="detail/{{data.Id}}">{{data.name || '--'}}</a>
+    </td>
+    <td>{{data.buildType || '--'}}</td>
+    <td>{{data.projectUrl || data.pkgName || '--'}}</td>
+    <td>{{data.branchName || data.pkgVersion || '--'}}</td>
+    <td>{{data.triggerManual || '--'}}</td>
+    <td [innerHtml]="data.lastBuildStatus | status: 'build' | async"></td>
+    <td>{{data.lastBuildTime | date : "yyyy-MM-dd HH:mm:ss" || '--'}}</td>
+    <td>
+      <nz-tooltip [nzTitle]="'运行'" [nzPlacement]="'top'">
+        <a *ngIf="buildOrNot[data.index] !== 1 && data.independentBuildStatus !=='IN_PROGRESS'"
+           nz-tooltip (click)="showBuildModel(modalContent,data.Id,data.index)" class="btn-opt">
+          <i class="fa fa-fw fa-play"></i>
+        </a>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'运行中'" [nzPlacement]="'top'">
+        <a *ngIf="buildOrNot[data.index] === 1 || data.independentBuildStatus ==='IN_PROGRESS'" nz-tooltip
+           (click)="stopBuild(data.Id,data.index)" class="btn-opt">
+          <i class="fa fa-fw fa-stop"></i>
+        </a>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'执行历史'" [nzPlacement]="'top'">
+        <a  nz-tooltip routerLink="history/{{data.Id}}" class="btn-opt">
+          <i class="fa fa-fw fa-history"></i>
+        </a>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'查看构建log'" [nzPlacement]="'top'">
+        <a nz-tooltip routerLink="log/{{data.Id}}/home" class="btn-opt">
+          <i class="fa fa-fw fa-book"></i>
+        </a>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'编辑'" [nzPlacement]="'top'">
+        <a nz-tooltip routerLink="add/{{data.Id}}/edit" class="btn-opt">
+          <i class="fa fa-fw fa-pencil"></i>
+        </a>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'删除'" [nzPlacement]="'top'">
+        <a nz-tooltip (click)="showConfirm(data.Id)" class="btn-opt">
+          <i class="fa fa-fw fa-trash"></i>
+        </a>
+      </nz-tooltip>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+

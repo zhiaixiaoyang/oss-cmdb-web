@@ -1,0 +1,21 @@
+[{
+    "status":"warn",
+    "label":"警告",
+    "color":"yellow"
+  },
+  {
+    "status":"success",
+    "label":"启动中",
+    "color":"blue"
+  },
+  {
+    "status":"running",
+    "label":"运行中",
+    "color":"green"
+  },
+  {
+    "status":"error",
+    "label":"错误",
+    "color":"red"
+  }
+]

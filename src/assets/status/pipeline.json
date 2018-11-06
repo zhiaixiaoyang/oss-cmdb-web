@@ -1,0 +1,16 @@
+[{
+    "status": "IN_PROGRESS",
+    "label": "正在执行",
+    "color": "blue"
+  },
+  {
+    "status": "IN_MANPOWER",
+    "label": "人工处理",
+    "color": "green"
+  },
+  {
+    "status": "ERROR",
+    "label": "错误",
+    "color": "red"
+  }
+]

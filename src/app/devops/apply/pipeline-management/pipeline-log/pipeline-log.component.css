@@ -1,0 +1,12 @@
+:host ::ng-deep .CodeMirror pre {
+  left: 10px;
+}
+:host ::ng-deep .CodeMirror-selected {
+  margin-left: 10px;
+}
+
+.spin-location {
+  position: absolute;
+  left: 48%;
+  bottom: 3%;
+}

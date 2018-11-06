@@ -1,0 +1,14 @@
+<h4 class="page-title">
+  <nzi-breadcrumb ></nzi-breadcrumb>
+  <div class="page-title-opt pull-right">
+    <button *ngIf="fresh === false" nz-button (click)="stopRefresh()">停止刷新</button>
+    <button *ngIf="fresh === true" nz-button (click)="startRefresh()">开始刷新</button>
+    <button nz-button (click)="historyBack()">
+      返回
+    </button>
+  </div>
+</h4>
+<nz-spin [nzSpinning]="loading">
+  <nzi-codemirror [isDocEnd]="isEnd"   [config]="config" [(ngModel)]="code"></nzi-codemirror>
+  <nz-spin class="spin-location" [nzSpinning]="spinLoading"></nz-spin>
+</nz-spin>

@@ -1,0 +1,83 @@
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+  </div>
+  <div class="pull-right">
+    <app-environment [nzPlaceHolder]="'选择集群'" [(ngModel)]="environment"
+                     [firstName]="true" [width]="220" [type]="'table'" (ngModelChange)="changeEnvironment()"></app-environment>
+  </div>
+</div>
+<div nz-row nzGutter="12">
+  <div nz-col nzMd="24" nzLg="24">
+    <div class="home-box">
+      <div class="header">集群情况</div>
+      <div nz-row class="body">
+        <div nz-col nzSm="24" nzMd="8" class="home-chartbox">
+          <div class="appservice-total">
+            <div class="title">节点</div>
+            <div class="num">{{appService.node.total}}</div>
+          </div>
+          <div echarts [options]="charOptionNode" class="appservice-chart"></div>
+          <div class="appservice-text">
+            <p>
+              <span class="appservice-healthy">健康</span>
+              <span class="num">{{appService.node.activenum}}</span>
+            </p>
+            <p>
+              <span class="appservice-unhealthy">不健康</span>
+              <span class="num">{{appService.node.inactivenum}}</span>
+            </p>
+          </div>
+        </div>
+        <div nz-col nzSm="24" nzMd="8" class="home-chartbox">
+          <div class="appservice-total">
+            <div class="title">存储</div>
+            <div class="num">{{appService.cache.total}}GB</div>
+          </div>
+          <div echarts [options]="charOptionCache" class="appservice-chart"></div>
+          <div class="appservice-text">
+            <p>
+              <span class="appservice-used">已用</span>
+              <span class="num">{{appService.cache.usednum}}GB</span>
+            </p>
+            <p>
+              <span class="appservice-use">可用</span>
+              <span class="num">{{appService.cache.usenum}}GB</span>
+            </p>
+          </div>
+        </div>
+        <div nz-col nzSm="24" nzMd="8" class="home-chartbox">
+          <div class="appservice-total">
+            <div class="title">工作负载</div>
+            <div class="num">{{appService.workload.total}}</div>
+          </div>
+          <div echarts [options]="charOptionWorkload" class="appservice-chart"></div>
+          <div class="appservice-text">
+            <p>
+              <span class="appservice-use">可用</span>
+              <span class="num">{{appService.workload.usenum}}</span>
+            </p>
+            <p>
+              <span class="appservice-used">不可用</span>
+              <span class="num">{{appService.workload.usednum}}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div nz-col nzXs="24" nzSm="24">
+  <div class="home-box">
+    <div class="header">资源监控</div>
+    <div nz-row class="body">
+      <div nz-col nzSm="24" nzMd="12" class="resourcemonitoring-chartbox">
+        <div echarts [options]="chartOptionResourceMonitoring" [merge]="updateOptionResourceMonitoring" class="resourcemonitoring-chart"></div>
+      </div>
+      <div nz-col nzSm="24" nzMd="12" class="resourcemonitoring-chartbox">
+        <div echarts [options]="chartOptionHttp" [merge]="updateOptionHttp" class="resourcemonitoring-chart"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+

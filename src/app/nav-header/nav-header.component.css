@@ -1,0 +1,280 @@
+header {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #282f39;
+}
+header > .container {
+  position: relative;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  z-index: 100;
+}
+#header-nav {
+  position: relative;
+  height: 100%;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-right: 15px;
+}
+nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  *zoom: 1;
+}
+nav:after {
+  display: block;
+  content: " ";
+  width: 0;
+  height: 0;
+  font-size: 0;
+  visibility: hidden;
+  clear: both;
+}
+nav > span {
+  float: left;
+  margin-left: 100px;
+  font-size: 18px;
+  color: #fff;
+}
+.logo-container {
+  float: left;
+  width: 214px;
+  border-right: 1px solid #22292f;
+}
+.logo-container span {
+  font-size: 20px;
+  color: #fff;
+  font-weight: 600;
+}
+.header-logo {
+  height: 38px;
+  margin-left: 20px;
+  margin-right: 5px;
+}
+.header-title {
+  font-size: 16px;
+  color: #fff;
+}
+.header-text {
+  font-size: 16px;
+  color: #919191;
+  text-align: center;
+  border-right: 1px solid #22292f;
+}
+.manger-text-container {
+  float: left;
+  width: 108px;
+  height: 60px;
+}
+.nav-aside {
+  float: left;
+  width: 148px;
+  height: 60px;
+}
+.nav-aside .header-text {
+  height: 60px;
+  display: block;
+  cursor: pointer;
+}
+.nav-aside .header-text .anticon {
+  margin-left: 10px;
+}
+.nav-aside-menu.ant-dropdown-menu {
+  width: 875px;
+  height: 480px;
+  margin-left: -129px;
+  margin-top: -5px;
+  background-color: #373e46;
+}
+nav a > span,
+nav a > i {
+  font-size: 14px;
+  color: #919191;
+  margin-right: 3px;
+}
+nz-dropdown {
+  float: right;
+  left: auto;
+  padding-left: 20px;
+  margin-right: 17px;
+}
+.dropdown-toggle > .fa {
+  margin-left: 0.35em;
+}
+.dropdown-header {
+  color: #555;
+  background-color: #eaedf1 !important;
+}
+nz-tabset {
+  height: 100%;
+}
+.nav-aside-menu ::ng-deep .ant-tabs-vertical.ant-tabs-left > .ant-tabs-bar .ant-tabs-tab {
+  padding: 10px 34px;
+  text-align: left;
+}
+.nav-aside-menu ::ng-deep .ant-tabs-vertical.ant-tabs-left > .ant-tabs-bar .ant-tabs-ink-bar {
+  display: none!important;
+}
+.nav-aside-menu ::ng-deep .ant-tabs-nav .ant-tabs-tab-active {
+  color: #35acd6;
+  background-color: #3b424a;
+}
+.nav-aside-menu .media {
+  margin-top: 25px;
+}
+.has-link {
+  cursor: pointer;
+  outline: none;
+}
+.nav-aside-menu .media .media-title {
+  margin-bottom: 8px;
+  color: #ababab;
+  font-size: 14px;
+}
+.nav-aside-menu .media .media-content .media-link {
+  color: #f4f4f4;
+  margin-right: 28px;
+  font-weight: 300;
+}
+.nav-aside-menu .media .media-heading {
+  margin-bottom: 10px;
+  color: #f4f4f4;
+  font-size: 14px;
+  font-weight: 300;
+}
+.nav-aside-menu .media .media-desc {
+  padding-right: 30px;
+  color: #ababab;
+  line-height: 25px;
+}
+.search-bar-container {
+  width: 200px;
+  float: right;
+  padding-right: 20px;
+  border-right: 1px solid #22292f;
+}
+.notice-container {
+  width: 104px;
+  float: right;
+}
+.ss-container {
+  width: 45px;
+  float: right;
+  border-left: 1px solid #22292f;
+}
+.tool-help.ant-dropdown-menu {
+  width: 300px;
+  margin-top: 23px;
+  margin-left: -264px;
+}
+.tool-head {
+  line-height: 50px;
+  border-bottom: 1px solid #ddd;
+  display: table;
+  width: 100%;
+}
+.tool-head-title {
+  padding-left: 20px;
+  font-size: 16px;
+  display: table-cell;
+}
+.tool-head-close {
+  text-align: right;
+  padding-right: 15px;
+  width: 35px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #000;
+  display: table-cell;
+}
+.tool-body {
+  padding: 20px 0 0 20px;
+  overflow: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.doc-wrap {
+  line-height: 24px;
+  width: 260px;
+}
+.doc-wrap .top-title {
+  display: block;
+  cursor: default;
+  color: #888;
+}
+.doc-wrap .doc-list {
+  font-size: 0;
+  overflow: hidden;
+  margin-top: 7px;
+}
+.doc-wrap .doc-list ul {
+  padding-left: 0;
+}
+.doc-wrap .doc-list li {
+  width: 33.3333333%;
+  display: inline-block;
+  font-size: 12px;
+}
+.doc-wrap .doc-list li a {
+  color: #000;
+}
+.name-area {
+  height: 60px;
+  border-left: 1px solid #22292f;
+}
+.name-area .ant-dropdown-link {
+  height: 60px;
+  display: block;
+}
+.ant-dropdown-menu {
+  margin-left: -20px;
+  margin-top: -4px;
+}
+.notice-text {
+  margin-right: 8px;
+}
+.head-png {
+  height: 33px;
+}
+.search-bar-container input {
+  color: #c5c5c5;
+  border-color: #373e46;
+  background-color: #373e46;
+}
+.menu-container {
+  margin-left: 10px;
+  float: left;
+}
+:host ::ng-deep .menu-container .ant-menu-horizontal {
+  font-size: 14px;
+  color: #919191;
+  line-height: 58px;
+  border-bottom: none;
+  background-color: #282f39;
+}
+:host ::ng-deep .menu-container .ant-menu-horizontal .ant-menu-item {
+  margin-right: 10px;
+  padding: 0 10px;
+  outline: none;
+}
+:host ::ng-deep .menu-container .ant-menu-horizontal > .ant-menu-item-selected {
+  border-bottom: 2px solid #36b3df;
+  color: #36b3df;
+}
+:host ::ng-deep .search-bar-container .ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled),
+:host ::ng-deep .search-bar-container .ant-input:hover,
+:host ::ng-deep .search-bar-container .ant-input:focus
+{
+  border-color: #373e46!important;
+}
+:host ::ng-deep .search-bar-container .ant-input-affix-wrapper .ant-input-suffix {
+  color: #c5c5c5;
+}

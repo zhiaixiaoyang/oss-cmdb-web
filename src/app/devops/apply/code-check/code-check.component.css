@@ -1,0 +1,16 @@
+.search-type {
+  width: 120px;
+}
+
+.search-width {
+  width: 220px;
+}
+
+.disable-li{
+  pointer-events: none;
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  box-shadow: none;
+  opacity: .65;
+  color: rgba(0, 0, 0, 0.25);
+}

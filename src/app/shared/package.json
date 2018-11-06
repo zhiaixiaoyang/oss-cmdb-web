@@ -1,0 +1,6 @@
+{
+  "name": "@trident/shared",
+  "version": "1.0.3",
+  "author": "inspur",
+  "main": "index.ts"
+}

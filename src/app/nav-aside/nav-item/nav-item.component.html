@@ -1,0 +1,17 @@
+<li *ngIf="sideList.children" class="first-li" nz-submenu [(nzOpen)]="sideList.open" (nzOpenChange)="openChange1()">
+  <a href="javascript:;" class="nav-first-level" title>
+    <i [class]="sideList.icon"></i>{{sideList.label}}
+  </a>
+  <ul class="nav-second-level">
+    <li *ngFor="let sideChildrenList of sideList.children" nz-menu-item [nzSelected]="sideChildrenList.selected">
+      <a [routerLink]="sideChildrenList.link" routerLinkActive="active">
+        <i class="fa fa-dot"></i>{{sideChildrenList.label}}
+      </a>
+    </li>
+  </ul>
+</li>
+<li *ngIf="!sideList.children" class="first-li" nz-menu-item [nzSelected]="sideList.selected">
+  <a [routerLink]="sideList.link" routerLinkActive="active" (click)="openChange1()">
+    <i [class]="sideList.icon"></i>{{sideList.label}}
+  </a>
+</li>

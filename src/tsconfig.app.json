@@ -1,0 +1,24 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "module": "es2015",
+    "types": []
+  },
+  "include": [
+    "../src",
+    "../node_modules/@hub/**/*.ts",
+    "../node_modules/@trident/**/*.ts",
+    "../node_modules/@sws/**/*.ts",
+    "../node_modules/@tsdb/**/*.ts",
+    "../node_modules/@rds/**/*.ts",
+    "../node_modules/@stream/**/*.ts",
+    "../node_modules/@insight/**/*.ts",
+    "../node_modules/ng-zorro-iop/**/*.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

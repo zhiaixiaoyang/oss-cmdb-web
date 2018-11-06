@@ -1,0 +1,6 @@
+{
+  "name": "@trident/core",
+  "version": "1.0.2-SNAPSHOT.13",
+  "author": "inspur",
+  "main": "index.ts"
+}

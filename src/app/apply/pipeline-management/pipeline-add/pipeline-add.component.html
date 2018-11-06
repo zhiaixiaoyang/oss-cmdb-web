@@ -1,0 +1,335 @@
+<div class="add-page-title">
+  <a (click)="handleCancel()"><i class="fas fa-angle-left"></i>返回列表</a>
+  <span>创建流水线</span>
+</div>
+<nz-alert nzType="info" nzBanner nzShowIcon="false" [nzDescription]='innerTemplate'
+          [ngStyle]="{ 'marginBottom': '16px' }">
+  <ng-template #innerTemplate>
+    温馨提示： 流水线由多个stage组成，组成流水线的stage可自由编排，根据研发流程进行stage添加并设置stage的类型和执行的操作。
+    <a *ngIf="!type" target="_blank">操作指南</a>
+  </ng-template>
+</nz-alert>
+<nz-spin class="spin-location" [nzSpinning]="loading || pipelineNameLoading">
+  <div class="form-fieldset form-horizontal form-align-left model-message">
+    <nzi-form [formName]="validateForm" #NziFormComponent>
+      <form class="form-border" nz-form [formGroup]="validateForm">
+        <nz-form-item>
+          <nz-form-label>流水线名称</nz-form-label>
+          <nz-form-control class="time-trigger-style">
+            <input nz-input placeholder="请输入流水线名称" formControlName="name" [(ngModel)]="editData.name">
+            <nz-form-explain *ngIf="getInvalidMessage('name')">
+              {{getInvalidMessage('name').message}}
+            </nz-form-explain>
+          </nz-form-control>
+          <nz-form-control class="time-trigger-style">
+            <div class="hint">
+              <span class="hint-message">提示信息</span>
+              <span class="hint-content">1、必须创建一个build节点。2、代码审查节点必须在放在build节点之后</span>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nzi-form>
+    <div class="pipeline-all">
+      <div class="pipeline-box">
+        <!--流水线-->
+        <div class="pipeline-board">
+          <div nz-col *ngFor="let item of node;let n = index">
+            <div *ngFor="let option of node[n];let i=index">
+              <!--奇数行排列布局-->
+              <div *ngIf="n%2==1&&node[n][i] !=='start'&& node[n][i]!=='end'"
+                   class="stage-odd" (mouseover)="mouseOver(n,i)" (mouseleave)="mouseMove()">
+                <!--//节点基本布局-->
+                <div [ngStyle]="setShadow(option.index)" class="stage-base">
+                  <div class="stage-name">{{option.name}}</div>
+                  <div *ngIf="row===n&&col===i" class="delete-stage">
+                    <i nz-tooltip class="fa fa-fw fa-trash " (click)="deleteStage(option.index)"></i>
+                  </div>
+                  <div (click)="editStage(n,i,option.index)" class="stage-content"></div>
+                  <div class="stage-tag" (click)="editStage(n,i,option.index)">
+                    <div *ngIf="option.type" class="stage-vertical"></div>
+                    <i *ngIf="option.type === 'Test'" class="fa fa-fw fa-text-width icon-style"></i>
+                    <i *ngIf="option.type === 'Build'" class="fa fa-fw fa-desktop icon-style"></i>
+                    <i *ngIf="option.type === 'TagAndDeploy'" class="fa fa-fw fa-tags icon-style"></i>
+                    <i *ngIf="option.type === 'ManualOperation'" class="fa fa-fw fa-hand-paper icon-style"></i>
+                    <i *ngIf="option.type === 'CodeCheck'" class="fa fa-fw fa-code icon-style"></i>
+                    <i *ngIf="option.type === 'Script'" class="fa fa-fw fa-audio-description icon-style"></i>
+                    <div class="stage-type">{{option.type}}</div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.imageTag">
+                      {{option.imageTag}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.timeout">
+                      {{option.timeout}}h
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.timeoutTest">
+                      {{option.timeoutTest}}h
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.constructId">
+                      {{option.constructId}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.codeCheckName">
+                      {{option.codeCheckName}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.script">
+                      {{option.script}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" [ngStyle]="showError(option.index)"
+                         class="error-message">
+                      <i class="anticon anticon-warning"></i>
+                    </div>
+                  </div>
+                </div>
+                <!--左箭头-->
+                <div class="stage-arrow-left">
+                  <i *ngIf="i!=3"
+                     class="fa fa-fw fa-long-arrow-alt-left stage-content-arrow-left"></i>
+                  <i *ngIf="i!=3" class="fa fa-fw fa-plus-circle stage-left-plus"
+                     (click)="addStage(option.index,n,i)"></i>
+                </div>
+                <!--下添加按钮-->
+                <div class="stage-arrow-down">
+                  <i *ngIf="i==3" class="fa fa-fw fa-long-arrow-alt-down stage-left-arrow-down"></i>
+                  <i *ngIf="i==3" class="fa fa-fw fa-plus-circle stage-down-left-plus"
+                     (click)="addStage(option.index,n,i)"></i>
+                </div>
+              </div>
+              <!--结束-->
+              <div class="stage-end-odd" *ngIf="n%2==1&&node[n][i] ==='end'">
+                <div class="stage-first-base">
+                  <div class="end-stage">
+                    <i class="far fa-fw fa-dot-circle first-icon"></i>
+                    <span class="end-content">结束</span>
+                  </div>
+                </div>
+              </div>
+              <!--开始-->
+              <div class="stage-even" *ngIf="pageIndex===1&&n===0&&i===0">
+                <div class="stage-first-base">
+                  <div class="start-stage">
+                    <i class="fa fa-fw fa-power-off first-icon"></i>
+                    <span class="start-content">开始</span>
+                  </div>
+                </div>
+                <div class="stage-even-arrow-right">
+                  <i *ngIf="i!=3" class="fa fa-fw fa-long-arrow-alt-right stage-right"></i>
+                  <i *ngIf="i!=3" class="fa fa-fw fa-plus-circle stage-plus" (click)="addStage(-1,0,0)"></i>
+                </div>
+              </div>
+              <!--偶数行排列布局-->
+              <div *ngIf="n%2==0 && node[n][i] !=='start' && node[n][i] !=='end'"
+                   class="stage-even" (mouseover)="mouseOver(n,i)" (mouseleave)="mouseMove()">
+                <!--//节点基本布局-->
+                <div [ngStyle]="setShadow(option.index)" class="stage-even-base">
+                  <div class="stage-name">{{option.name}}</div>
+                  <div *ngIf="row===n&&col===i" class="delete-stage">
+                    <i class="fa fa-fw fa-trash" (click)="deleteStage(option.index)"></i>
+                  </div>
+                  <div (click)="editStage(n,i,option.index)" class="stage-content"></div>
+                  <div class="stage-tag" (click)="editStage(n,i,option.index)">
+                    <div *ngIf="option.type" class="stage-vertical"></div>
+                    <i *ngIf="option.type === 'Test'" class="fa fa-fw fa-text-width icon-style"></i>
+                    <i *ngIf="option.type === 'Build'" class="fa fa-fw fa-desktop icon-style"></i>
+                    <i *ngIf="option.type === 'TagAndDeploy'" class="fa fa-fw fa-tags icon-style"></i>
+                    <i *ngIf="option.type === 'ManualOperation'" class="fa fa-fw fa-hand-paper icon-style"></i>
+                    <i *ngIf="option.type === 'CodeCheck'" class="fa fa-fw fa-code icon-style"></i>
+                    <i *ngIf="option.type === 'Script'" class="fa fa-fw fa-audio-description icon-style"></i>
+                    <div class="stage-type">{{option.type}}</div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.imageTag">
+                      {{option.imageTag}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.timeout">
+                      {{option.timeout}}h
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.timeoutTest">
+                      {{option.timeoutTest}}h
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.constructId">
+                      {{option.constructId}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.codeCheckName">
+                      {{option.codeCheckName}}
+                    </div>
+                    <div (click)="editStage(n,i,option.index)" class="tag-content" *ngIf="option.script">
+                      {{option.script}}
+                    </div>
+                  </div>
+                  <div (click)="editStage(n,i,option.index)" [ngStyle]="showError(option.index)" class="error-message">
+                    <i class="anticon anticon-warning"></i>
+                  </div>
+                </div>
+                <!--右箭头-->
+                <div class="stage-even-arrow-right">
+                  <i *ngIf="i!=3" class="fa fa-fw fa-long-arrow-alt-right stage-right"></i>
+                  <i *ngIf="i!=3" class="fa fa-fw fa-plus-circle stage-plus" (click)="addStage(option.index,n,i)"></i>
+                </div>
+                <!--下箭头-->
+                <div class="stage-arrow-down">
+                  <i *ngIf="i==3" class="fa fa-fw fa-long-arrow-alt-down stage-content-arrow-down"></i>
+                  <i *ngIf="i==3" class="fa fa-fw fa-plus-circle stage-down-plus"
+                     (click)="addStage(option.index,n,i)"></i>
+                </div>
+              </div>
+              <!--结束-->
+              <div class="stage-even" *ngIf="n%2==0&&node[n][i] ==='end'">
+                <div class="stage-first-base">
+                  <div class="start-stage">
+                    <i class="far fa-fw fa-dot-circle first-icon"></i>
+                    <span class="end-content">结束</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--分页-->
+        <i *ngIf="pageIndex>1" (click)="leftPage()" class="anticon anticon-left-circle-o left-page"></i>
+        <i *ngIf="pageIndex < pageTotal" (click)="rightPage()" class="anticon anticon-right-circle-o right-page"></i>
+      </div>
+      <!--输入部分-->
+      <nzi-form [formName]="validateStageForm" #NziStageFormComponent>
+        <form *ngIf="stageAllData.length > 0" class="add-stage-keyframe" nz-form [formGroup]="validateStageForm">
+          <div>
+            <nz-form-item nz-row>
+              <nz-form-item class="base-height"></nz-form-item>
+              <nz-form-item>
+                <div nz-col [nzOffset]="2">Stage类型</div>
+                <nz-form-control nz-col [nzOffset]="2">
+                  <nz-select class="form-input-width" [nzPlaceHolder]="'请输入节点类型'" formControlName="type"
+                             [(ngModel)]="stageData.type"
+                             (ngModelChange)="typeChange()">
+                    <nz-option *ngFor="let option of stageList" [nzLabel]="option.name"
+                               [nzValue]="option.name" [nzDisabled]="option.disabled"></nz-option>
+                  </nz-select>
+                  <nz-form-explain *ngIf="getFormStageControl('type')">
+                    {{getFormStageControl('type').message}}
+                  </nz-form-explain>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <div nz-col [nzOffset]="2">
+                  Stage名称
+                </div>
+                <nz-form-control nz-row [nzOffset]="2">
+                  <input class="form-input-width" nz-input formControlName="name" [(ngModel)]="stageData.name"
+                  >
+                  <nz-form-explain
+                    *ngIf="getFormStageControl('name')">
+                    {{getFormStageControl('name').message}}
+                  </nz-form-explain>
+                </nz-form-control>
+              </nz-form-item>
+              <div [ngSwitch]="typeInit">
+                <div *ngSwitchCase="0">
+                  <nz-form-item>
+                    <div nz-col [nzOffset]="2">构建</div>
+                    <nz-form-control nz-col [nzOffset]="2">
+                      <nz-select class="form-input-width" formControlName="constructId" [(ngModel)]="stageData.constructId"
+                                 (ngModelChange)="getCodeData(stageData.constructId)"
+                                 nzAllowClear nzShowSearch>
+                        <nz-option class="construct" *ngFor="let option of buildList" [nzLabel]="option.name"
+                                   [nzValue]="option.name"></nz-option>
+                      </nz-select>
+                      <nz-form-explain
+                        *ngIf="getFormStageControl('constructId')">
+                        {{getFormStageControl('constructId').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div *ngSwitchCase="1">
+                  <nz-form-item>
+                    <div nz-col [nzOffset]="2">镜像Tag
+                    </div>
+                    <nz-form-control nz-col [nzOffset]="2">
+                      <input class="form-input-width" nz-input [nzSize]="'default'" formControlName="imageTag" [(ngModel)]="stageData.imageTag"
+                      >
+                      <nz-form-explain
+                        *ngIf="getFormStageControl('imageTag')">
+                        {{getFormStageControl('imageTag').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div *ngSwitchCase="2">
+                  <nz-form-item>
+                    <div nz-col [nzOffset]="2">超时
+                    </div>
+                    <nz-form-control nz-col [nzOffset]="2">
+                      <input class="form-input-width" nz-input [nzSize]="'default'" formControlName="timeout" [(ngModel)]="stageData.timeout">
+                      <nz-form-explain
+                        *ngIf="getFormStageControl('timeout')">
+                        {{getFormStageControl('timeout').message}}
+                      </nz-form-explain>
+                      <span class="minute-layout">小时</span>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div *ngSwitchCase="3">
+                  <nz-form-item>
+                    <div nz-col [nzOffset]="2">超时
+                    </div>
+                    <nz-form-control nz-col [nzOffset]="2">
+                      <input class="form-input-width" nz-input [nzSize]="'default'" formControlName="timeoutTest" [(ngModel)]="stageData.timeoutTest">
+                      <nz-form-explain
+                        *ngIf="getFormStageControl('timeoutTest')">
+                        {{getFormStageControl('timeoutTest').message}}
+                      </nz-form-explain>
+                      <span class="minute-layout">小时</span>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div *ngSwitchCase="4">
+                  <nz-form-item>
+                    <div nz-col [nzOffset]="2">代码检查
+                    </div>
+                    <nz-form-control nz-col [nzOffset]="2">
+                      <nz-select class="form-input-width" formControlName="codeCheckId" [(ngModel)]="stageData.codeCheckId" (ngModelChange)="changeCodeCheck($event)"
+                                 nzAllowClear nzShowSearch>
+                        <nz-option class="construct" *ngFor="let option of codeCheckList" [nzLabel]="option.name"
+                                   [nzValue]="option.Id"></nz-option>
+                        <nz-option *ngIf="codeCheckLoading === true" nzDisabled nzCustomContent><i class="anticon anticon-loading anticon-spin loading-icon"></i> Loading Data...
+                        </nz-option>
+                      </nz-select>
+                      <nz-form-explain
+                        *ngIf="getFormStageControl('codeCheckId')">
+                        {{getFormStageControl('codeCheckId').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div *ngSwitchCase="5">
+                  <nz-form-item>
+                    <div nz-col [nzOffset]="2">脚本
+                    </div>
+                    <nz-form-control nz-col [nzOffset]="2">
+                      <textarea class="form-input-width" nz-input rows="4" wrap="hard" formControlName="script"
+                                [(ngModel)]="stageData.script"></textarea>
+                      <nz-form-explain
+                        *ngIf="getFormStageControl('script')">
+                        {{getFormStageControl('script').message}}
+                      </nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div *ngSwitchDefault></div>
+              </div>
+            </nz-form-item>
+          </div>
+        </form>
+      </nzi-form>
+    </div>
+    <div class="button-form-pipeline">
+      <div class="button-submit">
+        <button nz-button nzType="primary" (click)="handleOk()">
+          <span>保存</span>
+        </button>
+      </div>
+      <div class="button-back">
+        <button nz-button (click)="handleCancel()">
+          <span>返回</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-spin>
+

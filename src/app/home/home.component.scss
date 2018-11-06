@@ -1,0 +1,138 @@
+:host ::ng-deep .home-box {
+  margin-bottom: 20px;
+  .header {
+    font-size: 14px;
+    line-height: 39px;
+    color: #404040;
+  }
+  .body {
+    background: #fff;
+    font-size: 12px;
+    border: 1px solid #e9e9e9;
+    padding: 5px 0px;
+    min-height: 170px;
+    color: #5a5a5a;
+    overflow: hidden;
+  }
+  .home-chartbox {
+    border-right: 1px solid #e9e9e9;
+    height: 160px;
+    padding: 10px 40px;
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+
+.home-res {
+  overflow: hidden;
+  .body {
+    height: 170px;
+    box-sizing: border-box;
+    padding: 5px 10px;
+  }
+  ul {
+    padding: 16px 0 13px;
+    margin-bottom: 0;
+    li {
+      background: #fbfbfb;
+      margin-bottom: 3px;
+      padding: 0 28px;
+      height: 40px;
+      line-height: 40px;
+      overflow: hidden;
+    }
+  }
+}
+
+.appservice-total {
+  overflow: hidden;
+  margin-bottom: 20px;
+  .title {
+    width: 92px;
+    text-align: center;
+    float: left;
+  }
+  .num {
+    text-align: right;
+    float: right;
+  }
+}
+
+.appservice-chart {
+  width: 92px;
+  height: 92px;
+  float: left;
+}
+
+.appservice-text {
+  margin-left: 108px;
+  padding-top: 20px;
+  p {
+    margin-bottom: 16px;
+  }
+  .appservice-active:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background: #89cd10;
+  }
+  .appservice-inactive:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background: #e9e9e9;
+  }
+  .appservice-used:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background: #0462b7;
+  }
+  .appservice-use:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background:#7dffdb;
+  }
+  .appservice-healthy:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background: #89cd10;
+  }
+  .appservice-unhealthy:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background: #da1b2e;
+  }
+  .num {
+    text-align: right;
+    float: right;
+  }
+}
+
+.resourcemonitoring-chart {
+  height: 270px;
+}
+
+.resourcemonitoring-chartbox {
+  border-right: 1px solid #e9e9e9;
+  padding: 10px 0px 0px;
+  &:last-child {
+    border-right: none;
+  }
+}

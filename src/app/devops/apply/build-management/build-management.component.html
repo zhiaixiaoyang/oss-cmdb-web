@@ -1,0 +1,192 @@
+<div class="page-title">
+  <h4>构建</h4>
+  <a class="pull-right help-link">
+    <i class="anticon anticon-question-circle-o"></i>构建使用指南
+  </a>
+</div>
+<div class="page-header">
+  构建管理描述了由源代码或程序包构建镜像所需的元数据，包括：源码库配置、语言和构建工具、触发器、软件包信息、构件信息、镜像信息等。用户可基于构建进行镜像的Build和研发PipeLine的定义。
+</div>
+<div class="table-top table-operations clearfix">
+  <div class="pull-left">
+    <button routerLink="add" nz-button nzType="primary" class="btn-add"><i class="fas fa-plus"></i> 创建构建</button>
+    <nzi-form [formName]="validateForm" #FormTagComponent>
+      <ng-template #modalContent>
+        <form nz-form [formGroup]="validateForm">
+          <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">镜像tag</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+              <input formControlName="tag" [(ngModel)]="tag" nz-input>
+              <nz-form-explain *ngIf="getInvalidMessage('tag')">
+                {{getInvalidMessage('tag').message}}
+              </nz-form-explain>
+            </nz-form-control>
+            <p class="help-text" [class.help-tag-bottom]="getInvalidMessage('tag')">
+              <i class="anticon anticon-info-circle-o info-color"></i>
+              镜像tag如果与之前重名则覆盖之前相同tag的镜像！
+            </p>
+          </nz-form-item>
+        </form>
+      </ng-template>
+    </nzi-form>
+  </div>
+  <div class="pull-right">
+    <nz-select class="search-type" [(ngModel)]="selectedValue" nzPlaceHolder="选择一个状态">
+      <nz-option [nzValue]="'name'" [nzLabel]="'构建名称'"></nz-option>
+      <nz-option [nzValue]="'projectUrl'" [nzLabel]="'项目地址'"></nz-option>
+      <nz-option [nzValue]="'pkgName'" [nzLabel]="'程序包名称'"></nz-option>
+    </nz-select>
+    <ng-container [ngSwitch]="selectedValue">
+      <ng-container *ngSwitchCase="'name'">
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input name="name" (keyup.enter)="search()" [(ngModel)]="searchName" nz-input placeholder="请输入构建名称">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch (click)="search()">
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="'projectUrl'">
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input name="projectUrl" (keyup.enter)="search()" [(ngModel)]="searchName" nz-input placeholder="请输入项目地址">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch (click)="search()">
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchCase="'pkgName'">
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input name="pkgName" (keyup.enter)="search()" [(ngModel)]="searchName" nz-input placeholder="请输入程序包名称">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch (click)="search()">
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <nz-input-group class="search-width" nzSearch [nzSuffix]="suffixIconButton">
+          <input nz-input placeholder="请输入关键词">
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzSearch>
+            <i class="anticon anticon-search"></i>
+          </button>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <button nz-button (click)="renovate()" nzType="default" class="table-top-opt"><i class="anticon anticon-reload"></i></button>
+  </div>
+</div>
+<nz-table nzShowSizeChanger [nzPageSize]="10" [nzNoResult]="noResult" [(nzPageIndex)]="buildPageIndex" #nzTable [nzData]="data" [nzLoading]="loading"
+          nzBordered>
+  <thead>
+  <tr>
+    <th>
+      <span>构建名称</span>
+    </th>
+    <th>
+      <span>构建类型</span>
+    </th>
+    <th [nzWidth]="'300px'">
+      <span>项目地址/程序包名称</span>
+    </th>
+    <th>
+      <span>分支/版本</span>
+    </th>
+    <th>
+      <span>触发条件</span>
+    </th>
+    <th>
+      <span>构建状态</span>
+    </th>
+    <th>
+      <span>构建时间</span>
+    </th>
+    <th>
+      <span>操作</span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of nzTable.data">
+    <td>
+      <a routerLink="detail/{{data.Id}}">{{data.name || '--'}}</a>
+    </td>
+    <td>{{data.buildType || '--'}}</td>
+    <td>{{data.projectUrl || data.pkgName || '--'}}</td>
+    <td>{{data.branchName || data.pkgVersion || '--'}}</td>
+    <td>{{data.triggerManual || '--'}}</td>
+    <td [innerHtml]="data.lastBuildStatus | status: 'build' | async"></td>
+    <td>{{data.lastBuildTime | date : "y-MM-dd HH:mm:ss" || '--'}}</td>
+    <td class="table-opt">
+      <a *ngIf="buildOrNot[data.index] !== 1 && data.independentBuildStatus !=='IN_PROGRESS'"
+         (click)="showBuildModel(modalContent,data.Id,data.index,data.outputImageName)">运行</a>
+      <a *ngIf="buildOrNot[data.index] === 1 || data.independentBuildStatus ==='IN_PROGRESS'" nz-tooltip
+         (click)="stopBuild(data.Id,data.index)">停止</a>
+      <nz-dropdown [nzTrigger]="'click'">
+        <a nz-dropdown>
+          更多 <i class="anticon anticon-caret-down"></i>
+        </a>
+        <ul nz-menu class="ant-table-dropdown-menu">
+          <li routerLink="history/{{data.Id}}" nz-menu-item>执行历史</li>
+          <li nz-menu-item routerLink="log/{{data.Id}}/home">构建log</li>
+          <li nz-menu-item *ngIf="data.warrant === true" routerLink="add/{{data.Id}}/edit" >编辑</li>
+          <li nz-menu-item class="disable-li" *ngIf="data.warrant === false" >编辑</li>
+          <li nz-menu-item *ngIf="data.warrant === true" (click)="showConfirm(data.Id, data.name, deleteInfo)">删除</li>
+          <li nz-menu-item class="disable-li"  *ngIf="data.warrant === false">删除</li>
+        </ul>
+      </nz-dropdown>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+<!--删除构建关联信息提示框-->
+<ng-template #deleteInfo>
+  <div *ngIf="pipelineList.length > 0">
+    <b class="delete-title">此构建相关联流水线:</b><br>
+    <div class="delete-info">
+    <span *ngFor="let item of pipelineList; let i = index">
+      {{item}}
+    <a *ngIf="i !== pipelineList.length-1"> / </a>
+    </span>
+    </div>
+  </div>
+  <div *ngIf="codeQualityList.length > 0">
+    <b class="delete-title">此构建相关联代码检查:</b><br>
+    <div class="delete-info">
+    <span *ngFor="let item of codeQualityList; let i = index">
+      {{item}}
+    <a *ngIf="i !== codeQualityList.length-1"> / </a>
+    </span>
+    </div>
+  </div>
+</ng-template>
+<!--admin select environment to install jenkins-->
+<nzi-form [formName]="validateFormEnvironment" #FormEnvironmentComponent>
+  <ng-template #environmentInfo>
+    <form nz-form [formGroup]="validateFormEnvironment">
+      <nz-form-item>
+        <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">集群</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <app-environment formControlName="environment" [nzPlaceHolder]="'选择集群'" [firstName]="true"
+                           (change)="getEnvironment($event)" [type]="'table'"></app-environment>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">存储类型</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-select [nzPlaceHolder]="'选择存储类型'" formControlName="storageClass"
+                     [(ngModel)]="storageClass">
+            <nz-option *ngFor="let option of storageClassData" [nzLabel]="option.key"
+                       [nzValue]="option.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+</nzi-form>
+

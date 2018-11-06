@@ -1,0 +1,11 @@
+[{
+  "status":"warn",
+  "label":"警告",
+  "color":"red"
+},
+  {
+    "status":"SUCCESS",
+    "label":"运行中",
+    "color":"green"
+  }
+]

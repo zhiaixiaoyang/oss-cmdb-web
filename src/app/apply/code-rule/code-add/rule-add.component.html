@@ -1,0 +1,239 @@
+<div class="add-page-title">
+  <a (click)="handleCancel()"><i class="fas fa-angle-left"></i>返回列表</a>
+  <span>创建规则</span>
+</div>
+<nz-alert nzType="info" nzBanner nzShowIcon="false" [nzDescription]='innerTemplate'
+          [ngStyle]="{ 'marginBottom': '16px' }">
+  <ng-template #innerTemplate>
+    代码检查任务创建：选择一个构建关联对应的检查对象、检查语言、触发器类型，目前扫描类型为静态分析，选择检查策略实现代码检查。
+  </ng-template>
+</nz-alert>
+<nz-spin [nzSpinning]="loading">
+  <div class="form-fieldset form-horizontal form-align-left">
+    <nzi-form [formName]="validateForm" #NziFormComponent>
+      <form nz-form [formGroup]="validateForm">
+        <legend>
+          <i class="icon-square"></i>基本信息
+        </legend>
+        <fieldset>
+          <div class="form-static">
+            <nz-form-item>
+              <nz-form-label nzRequired>规则名称</nz-form-label>
+              <nz-form-control [nzSm]="11" [nzXs]="24">
+                <input formControlName="name" [(ngModel)]="modelData.name" id="name" nz-input>
+                <nz-form-explain *ngIf="getInvalidMessage('name')">
+                  {{getInvalidMessage('name').message}}
+                </nz-form-explain>
+              </nz-form-control>
+              <p class="help-text" [class.help-text-bottom]="getInvalidMessage('name')">
+                用于识别规则，只能以字母开头,仅包含字母、数字、下划线及中横线,长度介于1-50之间。
+              </p>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>描述</nz-form-label>
+              <nz-form-control [nzSm]="11" [nzXs]="24">
+                <textarea placeholder="可添加描述文字，说明这个规则集合做哪些检查等" rows="3" formControlName="description" [ngModel]="modelData.description"
+                          nz-input></textarea>
+                <nz-form-explain *ngIf="getInvalidMessage('description')">
+                  {{getInvalidMessage('description').message}}
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </fieldset>
+        <legend>
+          <i class="icon-square"></i>规则配置
+        </legend>
+        <fieldset>
+          <div class="form-static">
+            <nz-tabset [nzShowPagination]="'false'" nzSize="'default'" [nzTabPosition]="'left'" [nzType]="'line'"
+                       [(nzSelectedIndex)]="ruleIndex" (nzSelectedIndexChange)="triggerCheck()">
+              <nz-tab [nzTitle]="titleTemplate">
+                <ng-template #titleTemplate>
+                  <button [ngStyle]="setShadow()" nz-button (click)="handleOk()">
+                    <span>已选择规则</span>
+                  </button>
+                </ng-template>
+                <nz-table #nzTable [nzData]="ruleSelectData" [nzLoading]="ruleSelectLoading" nzBordered>
+                  <thead>
+                  <tr>
+                    <th>
+                      <span>规则名称</span>
+                    </th>
+                    <th>
+                      <span>问题级别</span>
+                    </th>
+                    <th>
+                      <span>问题类型</span>
+                    </th>
+                    <th>
+                      <span>语言</span>
+                    </th>
+                    <th>
+                      <span>标签</span>
+                    </th>
+                    <th>
+                      <span>构建状态</span>
+                    </th>
+                    <th>
+                      <span>构建时间</span>
+                    </th>
+                    <th>
+                      <span>操作</span>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let data of nzTable.data">
+                    <td>
+                      <a routerLink="detail/{{data.Id}}">{{data.name || '--'}}</a>
+                    </td>
+                    <td>{{data.buildType || '--'}}</td>
+                    <td>{{data.projectUrl || data.pkgName || '--'}}</td>
+                    <td>{{data.branchName || data.pkgVersion || '--'}}</td>
+                    <td>{{data.triggerManual || '--'}}</td>
+                    <td [innerHtml]="data.lastBuildStatus | status: 'build' | async"></td>
+                    <td>{{data.lastBuildTime | date : "yyyy-MM-dd HH:mm:ss" || '--'}}</td>
+                    <td>
+                      <nz-tooltip [nzTitle]="'运行'" [nzPlacement]="'top'">
+                        <a *ngIf="buildOrNot[data.index] !== 1 && data.independentBuildStatus !=='IN_PROGRESS'"
+                           nz-tooltip (click)="showBuildModel(modalContent,data.Id,data.index)" class="btn-opt">
+                          <i class="fa fa-fw fa-play"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'运行中'" [nzPlacement]="'top'">
+                        <a *ngIf="buildOrNot[data.index] === 1 || data.independentBuildStatus ==='IN_PROGRESS'" nz-tooltip
+                           (click)="stopBuild(data.Id,data.index)" class="btn-opt">
+                          <i class="fa fa-fw fa-stop"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'执行历史'" [nzPlacement]="'top'">
+                        <a  nz-tooltip routerLink="history/{{data.Id}}" class="btn-opt">
+                          <i class="fa fa-fw fa-history"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'查看构建log'" [nzPlacement]="'top'">
+                        <a nz-tooltip routerLink="log/{{data.Id}}/home" class="btn-opt">
+                          <i class="fa fa-fw fa-book"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'编辑'" [nzPlacement]="'top'">
+                        <a nz-tooltip routerLink="add/{{data.Id}}/edit" class="btn-opt">
+                          <i class="fa fa-fw fa-pencil"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'删除'" [nzPlacement]="'top'">
+                        <a nz-tooltip (click)="showConfirm(data.Id)" class="btn-opt">
+                          <i class="fa fa-fw fa-trash"></i>
+                        </a>
+                      </nz-tooltip>
+                    </td>
+                  </tr>
+                  </tbody>
+                </nz-table>
+              </nz-tab>
+              <nz-tab [nzTitle]="titleTemplate2">
+                <ng-template #titleTemplate2>
+                  <button [ngStyle]="setColor()" nz-button (click)="handleOk()">
+                    <span>可选择规则</span>
+                  </button>
+                </ng-template>
+                <nz-table #nzTable [nzData]="ruleAllData" [nzLoading]="ruleAllLoading" nzBordered>
+                  <thead>
+                  <tr>
+                    <th>
+                      <span>构建名称</span>
+                    </th>
+                    <th>
+                      <span>构建类型</span>
+                    </th>
+                    <th>
+                      <span>项目地址/程序包名称</span>
+                    </th>
+                    <th>
+                      <span>分支/版本</span>
+                    </th>
+                    <th>
+                      <span>触发条件</span>
+                    </th>
+                    <th>
+                      <span>构建状态</span>
+                    </th>
+                    <th>
+                      <span>构建时间</span>
+                    </th>
+                    <th>
+                      <span>操作</span>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let data of nzTable.data">
+                    <td>
+                      <a routerLink="detail/{{data.Id}}">{{data.name || '--'}}</a>
+                    </td>
+                    <td>{{data.buildType || '--'}}</td>
+                    <td>{{data.projectUrl || data.pkgName || '--'}}</td>
+                    <td>{{data.branchName || data.pkgVersion || '--'}}</td>
+                    <td>{{data.triggerManual || '--'}}</td>
+                    <td [innerHtml]="data.lastBuildStatus | status: 'build' | async"></td>
+                    <td>{{data.lastBuildTime | date : "yyyy-MM-dd HH:mm:ss" || '--'}}</td>
+                    <td>
+                      <nz-tooltip [nzTitle]="'运行'" [nzPlacement]="'top'">
+                        <a *ngIf="buildOrNot[data.index] !== 1 && data.independentBuildStatus !=='IN_PROGRESS'"
+                           nz-tooltip (click)="showBuildModel(modalContent,data.Id,data.index)" class="btn-opt">
+                          <i class="fa fa-fw fa-play"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'运行中'" [nzPlacement]="'top'">
+                        <a *ngIf="buildOrNot[data.index] === 1 || data.independentBuildStatus ==='IN_PROGRESS'" nz-tooltip
+                           (click)="stopBuild(data.Id,data.index)" class="btn-opt">
+                          <i class="fa fa-fw fa-stop"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'执行历史'" [nzPlacement]="'top'">
+                        <a  nz-tooltip routerLink="history/{{data.Id}}" class="btn-opt">
+                          <i class="fa fa-fw fa-history"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'查看构建log'" [nzPlacement]="'top'">
+                        <a nz-tooltip routerLink="log/{{data.Id}}/home" class="btn-opt">
+                          <i class="fa fa-fw fa-book"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'编辑'" [nzPlacement]="'top'">
+                        <a nz-tooltip routerLink="add/{{data.Id}}/edit" class="btn-opt">
+                          <i class="fa fa-fw fa-pencil"></i>
+                        </a>
+                      </nz-tooltip>
+                      <nz-tooltip [nzTitle]="'删除'" [nzPlacement]="'top'">
+                        <a nz-tooltip (click)="showConfirm(data.Id)" class="btn-opt">
+                          <i class="fa fa-fw fa-trash"></i>
+                        </a>
+                      </nz-tooltip>
+                    </td>
+                  </tr>
+                  </tbody>
+                </nz-table>
+              </nz-tab>
+            </nz-tabset>
+          </div>
+        </fieldset>
+        <nz-form-item>
+          <div class="button-form">
+            <div nz-col [nzSm]="2" [nzXs]="6">
+              <button nz-button nzType="primary" (click)="handleOk()">
+                <span>提交</span>
+              </button>
+            </div>
+            <div nz-col [nzSm]="2" [nzXs]="6">
+              <button nz-button (click)="handleCancel()">
+                <span>返回</span>
+              </button>
+            </div>
+          </div>
+        </nz-form-item>
+      </form>
+    </nzi-form>
+  </div>
+</nz-spin>

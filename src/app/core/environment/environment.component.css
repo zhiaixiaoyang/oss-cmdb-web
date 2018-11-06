@@ -1,0 +1,58 @@
+:host ::ng-deep .ant-radio-button-wrapper {
+  height: 30px;
+  margin-right: 2px;
+  min-width: 80px;
+  color: #38b2e3;
+  background-color: #e9f6fe;
+  border: none;
+  font-weight: 300;
+  text-align: center;
+}
+
+:host ::ng-deep .ant-radio-button-wrapper:not(:first-child)::before {
+  background: none;
+}
+
+:host ::ng-deep .ant-radio-button-wrapper-checked::before {
+  background-color: #fff !important;
+}
+
+:host ::ng-deep .ant-radio-button-wrapper-checked {
+  height: 30px;
+  background-color: #36b3df;
+  color: #fff;
+  -webkit-box-shadow: -1px 0 0 0 #fff;
+  box-shadow: -1px 0 0 0 #fff
+}
+
+:host ::ng-deep .ant-checkbox {
+  display: none;
+}
+
+:host ::ng-deep .ant-checkbox+span .ant-btn {
+  min-width: 80px;
+}
+
+:host ::ng-deep .ant-checkbox-checked+span .ant-btn {
+  background-color: #36b3df;
+  color: #fff;
+}
+
+:host ::ng-deep .ant-checkbox-wrapper:first-child {
+  margin-left: -7px;
+}
+
+:host ::ng-deep .ant-checkbox-wrapper:not(:first-child) {
+  margin-left: -17px;
+}
+
+:host ::ng-deep .ant-select-selection--single {
+  background-color: #eff7fd;
+  border-color: #badffa;
+}
+:host ::ng-deep .ant-select-selection--single .ant-select-arrow {
+  color: #badffa;
+}
+:host ::ng-deep .ant-select-selection__placeholder {
+  color: #404040;
+}

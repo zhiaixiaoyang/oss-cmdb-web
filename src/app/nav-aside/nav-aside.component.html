@@ -1,0 +1,16 @@
+<aside>
+  <div class="aside-title">
+    <div class="aside-title-logo">
+      <i [class]="icon"></i>
+    </div>
+    <div class="aside-title-text">{{label}}</div>
+  </div>
+  <ul nz-menu [nzMode]="'inline'" class="sidebar-nav" tabindex="1" #ul>
+    <div style="padding-bottom: 10px;">
+      <nav-item *ngFor="let sideList of sideLists" [sideList]="sideList" (openChange)="openChange(sideList)"></nav-item>
+    </div>
+    <div style="padding-top: 10px;">
+      <nav-item *ngFor="let sideList of adminSideLists" [sideList]="sideList" (openChange)="openChange1(sideList)"></nav-item>
+    </div>
+  </ul>
+</aside>

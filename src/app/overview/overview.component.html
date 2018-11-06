@@ -1,0 +1,72 @@
+<div nz-row [nzGutter]="8">
+  <div nz-col [nzSpan]="8">
+    <nz-card [nzActions]="[memoryUsedArea,memoryAllArea]">
+      <nz-tooltip [nzPlacement]="'top'">
+        <div nz-tooltip class="card-desc" style="font-size:0;">
+          <iframe class="iframe-scroll" [src]="memory" frameborder="0"  scrolling="no" (load)="setIframeStyle(this)" style="overflow:hidden;"></iframe>
+        </div>
+      </nz-tooltip>
+      <ng-template #memoryUsedArea>
+        <iframe [src]="memoryUsed" width="99%" height="120" frameborder="0" scrolling="no"></iframe>
+      </ng-template>
+      <ng-template #memoryAllArea>
+        <nz-tooltip [nzPlacement]="'top'">
+          <iframe [src]="memoryAll" width="99%" height="120" frameborder="0" scrolling="no"></iframe>
+        </nz-tooltip>
+      </ng-template>
+    </nz-card>
+  </div>
+  <div nz-col [nzSpan]="8">
+    <nz-card [nzActions]="[cpuUsedArea,cpuAllArea]">
+      <nz-tooltip [nzPlacement]="'top'">
+        <div nz-tooltip class="card-desc">
+          <iframe [src]="cpu" frameborder="0" scrolling="no"></iframe>
+        </div>
+      </nz-tooltip>
+      <ng-template #cpuUsedArea>
+        <iframe [src]="cpuUsed" width="99%" height="120" frameborder="0" scrolling="no"></iframe>
+      </ng-template>
+      <ng-template #cpuAllArea>
+        <nz-tooltip [nzPlacement]="'top'">
+          <iframe [src]="cpuAll"  width="99%" height="120" frameborder="0" scrolling="no"></iframe>
+        </nz-tooltip>
+      </ng-template>
+    </nz-card>
+  </div>
+  <div nz-col [nzSpan]="8">
+    <nz-card [nzActions]="[filesystemUsed,filesystemAll]">
+      <nz-tooltip [nzPlacement]="'top'">
+        <div nz-tooltip class="card-desc">
+          <iframe [src]="system" frameborder="0" scrolling="no"></iframe>
+        </div>
+      </nz-tooltip>
+      <ng-template #filesystemUsed>
+        <iframe [src]="systemUsed" width="99%" height="120" frameborder="0" scrolling="no"></iframe>
+      </ng-template>
+      <ng-template #filesystemAll>
+        <nz-tooltip [nzPlacement]="'top'">
+          <iframe [src]="systemAll" width="99%" height="120" frameborder="0" scrolling="no"></iframe>
+        </nz-tooltip>
+      </ng-template>
+    </nz-card>
+  </div>
+</div>
+<div nz-col [nzSpan]="12">
+  <nz-card>
+    <nz-tooltip [nzPlacement]="'top'">
+      <div nz-tooltip class="card-desc" style=" clear:both;">
+        <iframe [src]="nodeCpu" width="450" height="200" frameborder="0" scrolling="no"></iframe>
+      </div>
+    </nz-tooltip>
+  </nz-card>
+</div>
+<div nz-col [nzSpan]="12">
+  <nz-card>
+    <nz-tooltip [nzPlacement]="'top'">
+      <div nz-tooltip class="card-desc" style=" clear:both;">
+        <iframe [src]="nodeMemory" width="450" height="200" frameborder="0" scrolling="no"></iframe>
+      </div>
+    </nz-tooltip>
+  </nz-card>
+</div>
+

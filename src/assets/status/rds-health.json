@@ -1,0 +1,26 @@
+[
+  {
+    "status": "health",
+    "label": "正常",
+    "color": "green"
+  },
+  {
+    "status": "unhealth",
+    "label": "异常",
+    "color": "yellow"
+  },
+  {
+    "status": "unknown",
+    "label": "未知"
+  },
+  {
+    "status": "installing",
+    "label": "创建中",
+    "color": "blue"
+  },
+  {
+    "status": "failed",
+    "label": "错误",
+    "color": "red"
+  }
+]
